@@ -167,7 +167,7 @@ if ($db_conn) {
   													numOfPassengers int,
   													primary key (flightNo, departureDate),
   													foreign key (aircraftSerialNo) references AirCraft
-                            ON DELETE NO ACTION ON UPDATE NO ACTION
+                            ON DELETE NO ACTION
                             )");
   		OCICommit($db_conn);
 
@@ -636,7 +636,7 @@ primary key(employNumber,flightNumber,dateorg),
 foreign key (employNumber) references onboardstaff
 ON DELETE CASCADE，
 foreign key(flightNumber,dateorg) references 
-Flight_Use ON DELETE CASCADE ON UPDATE CASCADE)
+Flight_Use ON DELETE CASCADE)
 
 ");
 
@@ -1269,7 +1269,6 @@ name      varchar2(100),
 employNumber  int,
 primary key   (userid),
 foreign key(employNumber) references customerservice
-ON DELETE NO ACTION
 ON UPDATE CASCADE)");
 
 executePlainSQL("insert into member_serve values('acd123','cnoad','M','nbcsja@gmail.com','WO1029387','China',
