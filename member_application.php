@@ -9,7 +9,10 @@
   <body>
 
     <h2 style="text-align: center;">Membership Application</h2>
-    <form method="POST" action="mainpage.php">
+    <form action="mainpage.php">
+      <input type="submit" value="Back">
+    </form>
+    <form method="POST" action="member_application.php">
       <p>User ID:
         <input type="text" name="userID" size="12">
       </p>
@@ -40,6 +43,7 @@
       <p><input type="submit" value="Apply" name="applyMembership"></p>
 
     </form>
+】
 
     <div class="wrapper">
       <!-- <h2>Eagle Fly</h2>
@@ -175,7 +179,7 @@
               OCICommit($db_conn);
               //$new_member = executePlainSQL("select * from member_serve");
               //printExample($new_member);
-              echo "Success!";
+              echo "<script> alert('Congratulation! You are our member now') </script>";
             }
 
       }
