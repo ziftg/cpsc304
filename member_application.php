@@ -9,7 +9,7 @@
   <body>
 
     <h2 style="text-align: center;">Membership Application</h2>
-    <form method="POST" action="member.php">
+    <form method="POST" action="mainpage.php">
       <p>User ID:
         <input type="text" name="userID" size="12">
       </p>
@@ -49,6 +49,9 @@
 
 
       <?php
+
+
+      
 
       //this tells the system that it's no longer just parsing
       //html; it's now parsing PHP
@@ -131,36 +134,49 @@
         echo "</table>";
       }
 
+      function printExample ($result) {
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2]. "</td><td>" . $row[3]
+              . "</td><td>" . $row[4]. "</td><td>" . $row[5]. "</td><td>" . $row[6]. "</td><td>" . $row[7] 
+              . "</td><td>" . $row[8] ."</td></tr>"; //or just use "echo $row[0]"
+        }
+      }
+
       // // Connect Oracle...
       if ($db_conn) {
 
         if (array_key_exists('applyMembership', $_POST)) {
             if ($_POST['userID'] == NULL || $_POST['name'] == NULL || $_POST['gender'] == NULL ||
                 $_POST['passport'] == NULL || $_POST['email'] == NULL || $_POST['nationality'] == NULL ||
-                $_POST['dob'] == NULL)
+                $_POST['dob'] == NULL) {
               echo "<script> alert('All fields must not be empty.') </script>";
-            if ($_POST['password1'] != $_POST['password2']) {
+            }
+            else if ($_POST['password1'] != $_POST['password2']) {
               echo "<script> alert('Password Not match.') </script>";
             }
-            //else {
-              // $employID = rand(1000, 1021);
-              // $tuple = array (
-              //   ":a" => $_POST['userID'],
-              //   ":b" => $_POST['password'],
-              //   ":c" => $_POST['gender'],
-              //   ":d" => $_POST['email'],
-              //   ":e" => $_POST['passport'],
-              //   ":f" => $_POST['nationality'],
-              //   ":g" => $_POST['dob'],
-              //   ":h" => $_POST['name'],
-              //   ":k" => $employID 
-              // );
-              // $alltuples = array (
-              //   $tuple
-              // );
-              // executeBoundSQL("insert into member_serve values (:a, :b, :c, :d, :e, :f, :g, :h, :k)", $alltuples);
-              // OCICommit($db_conn);
-            //}
+            else {
+              $employID = rand(1000, 1021);
+              $userid = $_POST['userID'];
+              $tuple = array (
+                ":a" => $_POST['userID'],
+                ":b" => $_POST['password'],
+                ":c" => $_POST['gender'],
+                ":d" => $_POST['email'],
+                ":e" => $_POST['passport'],
+                ":f" => $_POST['nationality'],
+                ":g" => $_POST['dob'],
+                ":h" => $_POST['name'],
+                ":k" => $employID 
+              );
+              $alltuples = array (
+                $tuple
+              );
+              executeBoundSQL("insert into member_serve values (:a, :b, :c, :d, :e, :f, :g, :h, :k)", $alltuples);
+              OCICommit($db_conn);
+              //$new_member = executePlainSQL("select * from member_serve");
+              //printExample($new_member);
+              echo "Success!";
+            }
 
       }
     }
