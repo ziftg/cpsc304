@@ -1,3 +1,8 @@
+<form method="POST" action="database_init.php">
+   
+<p><input type="submit" value="Reset" name="reset"></p>
+</form>
+
 <?php
 
 //this tells the system that it's no longer just parsing
@@ -139,22 +144,43 @@ if ($db_conn) {
 
     if (array_key_exists('reset', $_POST)) {
   	// Drop old table...
-  		echo "<br> dropping AirCraft table <br>";
-  		executePlainSQL("Drop table Flight_Use");
-  		executePlainSQL("Drop table AirCraft");
+  		//echo "<br> dropping AirCraft table <br>";
+  		executePlainSQL("Drop table member_serve");
+  		executePlainSQL("Drop table ticket_has");
       executePlainSQL("Drop table workin");
+       executePlainSQL("Drop table Flight_Use");
+       executePlainSQL("drop table purchase");
       executePlainSQL("Drop table onboardstaff");
       executePlainSQL("drop table customerservice");
-      executePlainSQL("Drop table purchase");
+      executePlainSQL("Drop table AirCraft");
 
-  		echo "<br> creating AirCraft table<br>";
+  		//echo "<br> creating AirCraft table<br>";
   		executePlainSQL("create table AirCraft (
                           serialNo varchar2(8),
   												type varchar2(14),
   												capacity int,
   												primary key (serialNo))");
-  		echo "<br> creating Flight table <br>";
-  		executePlainSQL(  "create table Flight_Use (flightNumber varchar2(6),
+  		// echo "<br> creating Flight table <br>";
+      executePlainSQL("create table customerservice(
+                          employNumber int not null,
+                          name varchar2(50) not null,
+                          password varchar2(30) not null,
+                          primary key(employNumber)
+                          )");
+      executePlainSQL("create table onboardstaff(
+                          employNumber int not null,
+                          name varchar2(100) not null,
+                          password varchar2(30) not null,
+                          role varchar2(30) not null,
+                          primary key(employNumber)
+                          )");
+      executePlainSQL("create table purchase(
+                          userid varchar2(20) not null,
+                          ticketid varchar2(20) not null,
+                          primary key(userid,ticketid))");
+
+  		executePlainSQL(  "create table Flight_Use (
+                            flightNumber varchar2(6),
   													departureDate varchar2(10),
   													aircraftSerialNo varchar2(8),
   													ticketPrice number,
@@ -165,11 +191,44 @@ if ($db_conn) {
   													ATD timestamp,
   													ATA timestamp,
   													numOfPassengers int,
-  													primary key (flightNo, departureDate),
+  													primary key (flightNumber, departureDate),
   													foreign key (aircraftSerialNo) references AirCraft
-                            ON DELETE NO ACTION
                             )");
-  		OCICommit($db_conn);
+      
+      executePlainSQL("create table workin(
+                          employNumber int not null,
+                          flightNumber varchar2(6) not null,
+                          dateorg varchar2(10) not null,
+                          primary key(employNumber,flightNumber,dateorg),
+                          foreign key (employNumber) references onboardstaff
+                          ON DELETE CASCADE,
+                          foreign key(flightNumber, dateorg) references 
+                          Flight_Use ON DELETE CASCADE)
+                          ");
+      
+      executePlainSQL("create table ticket_has(
+                          ticketID    int,
+                          ticketPrice   int,
+                          passportNumber    varchar2(10),
+                          flightNumber  varchar2(6) not null,
+                          dateorg     varchar2(10) not null,
+                          primary key (ticketID),
+                          foreign key(flightNumber,dateorg) references Flight_Use
+                          ON DELETE CASCADE)");
+      executePlainSQL("create table member_serve(
+                          userid    varchar2(30),
+                          password  varchar2(30),
+                          gender    varchar2(20),
+                          emailAddress  varchar2(50),
+                          passportNum  varchar2(30),
+                          nationality  varchar2(50),
+                          dob       varchar2(10),
+                          name      varchar2(100),
+                          employNumber  int,
+                          primary key   (userid),
+                          foreign key (employNumber) references customerservice ON DELETE CASCADE
+                          )");
+  		//OCICommit($db_conn);
 
   		$a1 = array (
   			":sno" => "51-11001",
@@ -505,13 +564,6 @@ if ($db_conn) {
   		);
   		executeBoundSQL("insert into Flight_Use values (:fn, :dDate, :sno, :price, :aApt, :dApt, :ETD, :ETA, :ATD, :ATA, :nop)", $allA);
 
-executePlainSQL("create table customerservice(
-employNumber int not null,
-name varchar2(50) not null,
-password varchar2(30) not null,
-primary key(employNumber)
-)");
-
 executePlainSQL(
 "insert into customerservice values('1001', 'Amanda Smith','amanda1001')");
 executePlainSQL(
@@ -557,13 +609,7 @@ executePlainSQL(
 );
 
 // executePlainSQL("Drop table onboardstaff");
-executePlainSQL("create table onboardstaff(
-employNumber int not null,
-name varchar2(100) not null,
-password varchar2(30) not null,
-role varchar2(30) not null,
-primary key(employNumber)
-)");
+
 
 executePlainSQL(
 "insert into onboardstaff
@@ -628,17 +674,7 @@ executePlainSQL("
 insert into onboardstaff
 values('2021','Sihan Wang','sihan2021','engineer')");
 
-executePlainSQL("create table workin(
-employNumber int not null,
-flightNumber varchar2(10) not null,
-dateorg varchar2(30) not null,
-primary key(employNumber,flightNumber,dateorg),
-foreign key (employNumber) references onboardstaff
-ON DELETE CASCADE，
-foreign key(flightNumber,dateorg) references 
-Flight_Use ON DELETE CASCADE)
 
-");
 
 executePlainSQL("
 insert into workin
@@ -1065,10 +1101,6 @@ executePlainSQL("
 insert into workin
 values('2014','EF1002','2017-04-22')");
 
-executePlainSQL("create table purchase(
-userid varchar2(20) not null,
-ticketid varchar2(20) not null,
-primary key(userid,ticketid))");
 
 executePlainSQL("insert into purchase values('acd123','8382177546344')");
 
@@ -1105,15 +1137,7 @@ executePlainSQL("insert into purchase values('wre343','8021843324897')");
 
 executePlainSQL("insert into purchase values('fdf534','1324803812041')");
 
-executePlainSQL("create table ticket_has(
-ticketID    int,
-ticketPrice   int,
-passportNumber    varchar2(10),
-flightNumber  varchar2(10) not null,
-dateorg     varchar2(30) not null,
-primary key (ticketID),
-foreign key(flightNumber,dateorg) references Flight_Use
-ON DELETE CASCADE)");
+
 
 executePlainSQL("insert into ticket_has values('8382177546344','400','WO1029387','EF1001','2017-03-20')");
 executePlainSQL("insert into ticket_has values('2194387198102','200','AK1827392','EF1001','2017-03-20')");
@@ -1256,129 +1280,49 @@ executePlainSQL("insert into ticket_has values('5432635643923','220','SQ2354233'
 executePlainSQL("insert into ticket_has values('5432588433453','220','SQ4562342','EF1002','2017-04-22')");
 executePlainSQL("insert into ticket_has values('5425435643543','220','SQ2314892','EF1002','2017-04-22')");
 
-      OCICommit($db_conn);
-executePlainSQL("create table member_serve(
-userid    varchar2(30),
-password  varchar2(30),
-gender    varchar2(20),
-emailAddress  varchar2(50),
-passportNum  varchar2(30),
-nationality  varchar2(50),
-dob       date,
-name      varchar2(100),
-employNumber  int,
-primary key   (userid),
-foreign key(employNumber) references customerservice
-ON UPDATE CASCADE)");
+      //OCICommit($db_conn);
+
 
 executePlainSQL("insert into member_serve values('acd123','cnoad','M','nbcsja@gmail.com','WO1029387','China',
-'1982-09-01','Hua Li','10012')");
+'1982-09-01','Hua Li','1012')");
 
 executePlainSQL("insert into member_serve values('cdf123','pnvae','F','novad@gmail.com','AK1827392','US',
-'1978-02-01','Adele Smith','10013')");
+'1978-02-01','Adele Smith','1013')");
 
 executePlainSQL("insert into member_serve values('pmf123','nvaen','F','ncaedv@gmail.com','DU2984738','UK',
-'1996-02-21','Emma Waston','10014')");
+'1996-02-21','Emma Waston','1014')");
 
 executePlainSQL("insert into member_serve values('abc234','vnpanvkef','F','ncoia@gmail.com','WI1992832','France',
-'1976-03-03','Taylor Evans','10015')");
+'1976-03-03','Taylor Evans','1015')");
 
 executePlainSQL("insert into member_serve values('chf133','Nvafdkl','M','nvoiae@gmail.com','SE2301829','Canada',
-'1999-01-01','Harry Evans','10016')");
+'1999-01-01','Harry Evans','1016')");
 
 executePlainSQL("insert into member_serve values('eqw143','qweruo','M','dsfoui@gmail.com','WU3229832','China',
-'1982-02-09','Tameika Joly','10017')");
+'1982-02-09','Tameika Joly','1017')");
 
 executePlainSQL("insert into member_serve values('sfg234','qwufuo','M','wqeiy@gmail.com','EQ2938473','US',
-'1936-09-12','Karena Mcclaskey','10018')");
+'1936-09-12','Karena Mcclaskey','1018')");
 
 executePlainSQL("insert into member_serve values('fwh134','qewryow','M','ewqroi@gmail.com','SS2983432','Canada',
-'1997-12-23','Dione Ammons','10019')");
+'1997-12-23','Dione Ammons','1019')");
 
 executePlainSQL("insert into member_serve values('hsf452','qerywe','M','qwehfi@gmail.com','SI2938293','China',
-'1989-05-23','Shae Fitton','10020')");
+'1989-05-23','Shae Fitton','1020')");
  OCICommit($db_conn);
 
 
-      executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+      //executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
     	// $test = executePlainSQL("select * from Flight_Use");
       // $things = executePlainSQL("select * from customerservice");
-      $work = executePlainSQL("select * from workin");
+      //$work = executePlainSQL("select * from workin");
     	// printResult($things);
-      $onboardstaff = executePlainSQL("select * from onboardstaff");
-      $fuck = executePlainSQL("select * from purchase");
+      //$onboardstaff = executePlainSQL("select * from onboardstaff");
       // printResultwi($work);
       // printResultob($onboardstaff);
       // printResultp($fuck);
 
-
-	} else
-		if (array_key_exists('insertsubmit', $_POST)) {
-			//Getting the values from user and insert data into the table
-			$tuple = array (
-				":bind1" => $_POST['insNo'],
-				":bind2" => $_POST['insName']
-			);
-			$alltuples = array (
-				$tuple
-			);
-			executeBoundSQL("insert into tab1 values (:bind1, :bind2)", $alltuples);
-			OCICommit($db_conn);
-
-		} else
-			if (array_key_exists('updatesubmit', $_POST)) {
-				// Update tuple using data from user
-				$tuple = array (
-					":bind1" => $_POST['oldName'],
-					":bind2" => $_POST['newName']
-				);
-				$alltuples = array (
-					$tuple
-				);
-				executeBoundSQL("update tab1 set name=:bind2 where name=:bind1", $alltuples);
-				OCICommit($db_conn);
-
-			} else
-				if (array_key_exists('dostuff', $_POST)) {
-					// Insert data into table...
-          echo "<br> creating new table </br>";
-					executePlainSQL("insert into tab1 values (10, 'Frank')");
-					// Inserting data into table using bound variables
-					$list1 = array (
-						":bind1" => 6,
-						":bind2" => "All"
-					);
-					$list2 = array (
-						":bind1" => 7,
-						":bind2" => "John"
-					);
-					$allrows = array (
-						$list1,
-						$list2
-					);
-					executeBoundSQL("insert into tab1 values (:bind1, :bind2)", $allrows); //the function takes a list of lists
-					// Update data...
-					//executePlainSQL("update tab1 set nid=10 where nid=2");
-					// Delete data...
-					//executePlainSQL("delete from tab1 where nid=1");
-					OCICommit($db_conn);
-				}
-
-	if ($_POST && $success) {
-		//POST-REDIRECT-GET -- See http://en.wikipedia.org/wiki/Post/Redirect/Get
-		header("location: oracle-test.php");
-	} else {
-		// Select data...
-		$result = executePlainSQL("select * from tab1");
-		// printResult($result);
-	}
-
-	//Commit to save changes...
-	OCILogoff($db_conn);
-} else {
-	echo "cannot connect";
-	$e = OCI_Error(); // For OCILogon errors pass no handle
-	echo htmlentities($e['message']);
+} 
 }
 
 /* OCILogon() allows you to log onto the Oracle database
