@@ -22,7 +22,7 @@
   $pageTitle = "What the actual fuck";
   $section = null;
   include("inc/header.php");
-  include("db_connection.php");
+  include("database_init.php");
   include("inc/footer.php");
   ?>
   </html>

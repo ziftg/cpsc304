@@ -148,12 +148,13 @@ if ($db_conn) {
       executePlainSQL("Drop table purchase");
 
   		echo "<br> creating AirCraft table<br>";
-  		executePlainSQL("create table AirCraft (serialNo varchar2(8),
+  		executePlainSQL("create table AirCraft (
+                          serialNo varchar2(8),
   												type varchar2(14),
   												capacity int,
   												primary key (serialNo))");
   		echo "<br> creating Flight table <br>";
-  		executePlainSQL("create table Flight_Use (flightNo varchar2(6),
+  		executePlainSQL(  "create table Flight_Use (flightNumber varchar2(6),
   													departureDate varchar2(10),
   													aircraftSerialNo varchar2(8),
   													ticketPrice number,
@@ -165,7 +166,9 @@ if ($db_conn) {
   													ATA timestamp,
   													numOfPassengers int,
   													primary key (flightNo, departureDate),
-  													foreign key (aircraftSerialNo) references AirCraft)");
+  													foreign key (aircraftSerialNo) references AirCraft
+                            ON DELETE NO ACTION
+                            )");
   		OCICommit($db_conn);
 
   		$a1 = array (
@@ -627,11 +630,15 @@ values('2021','Sihan Wang','sihan2021','engineer')");
 
 executePlainSQL("create table workin(
 employNumber int not null,
-flightNumber char(10) not null,
-dateorg char(30) not null,
+flightNumber varchar2(10) not null,
+dateorg varchar2(30) not null,
 primary key(employNumber,flightNumber,dateorg),
 foreign key (employNumber) references onboardstaff
-ON DELETE CASCADE)");
+ON DELETE CASCADE，
+foreign key(flightNumber,dateorg) references 
+Flight_Use ON DELETE CASCADE)
+
+");
 
 executePlainSQL("
 insert into workin
@@ -1098,7 +1105,199 @@ executePlainSQL("insert into purchase values('wre343','8021843324897')");
 
 executePlainSQL("insert into purchase values('fdf534','1324803812041')");
 
+executePlainSQL("create table ticket_has(
+ticketID    int,
+ticketPrice   int,
+passportNumber    varchar2(10),
+flightNumber  varchar2(10) not null,
+dateorg     varchar2(30) not null,
+primary key (ticketID),
+foreign key(flightNumber,dateorg) references Flight_Use
+ON DELETE CASCADE)");
+
+executePlainSQL("insert into ticket_has values('8382177546344','400','WO1029387','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('2194387198102','200','AK1827392','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('2348975981998','240','DU2984738','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('9837481923897','240','WI1992832','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('2848971298923','500','SE2301829','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('3283042890234','240','WU3229832','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('4285904839508','240','EQ2938473','EF1001','2017-03-20')");
+executePlainSQL("insert into ticket_has values('2348590843423','240','SS2983432','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('2340958934202','335','SI2938293','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('2092429837843','240','SJ9283728','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('9082937489298','240','DU2938293','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('2894198798429','240','DF123212','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('1203849284739','219','XF1232123','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('1234080132347','338','CD1234123','EF1002','2017-03-22')");
+executePlainSQL("insert into ticket_has values('1230489312798','178','CD2231234','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('2938237498293','567','CD1232123','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('2394819739848','240','AS1230822','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('8021843324897','240','IE1829382','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('1324803812041','575','EC2839283','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('1239048018084','240','KQ5659620','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('2134809123800','383','TE2637788','EF1001','2017-03-24')");
+executePlainSQL("insert into ticket_has values('1203840231843','240','KK8062753','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('2138409231804','240','YP5754670','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('1248031208323','240','OD5381468','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('4283408120348','240','VJ7214899','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('9283748947532','240','TG1670183','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('8497598285432','240','CE4256878','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('2374198542385','240','YF4020758','EF1002','2017-03-25')");
+executePlainSQL("insert into ticket_has values('2482580943890','242','KU1982873','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('8478939837298','245','IJ3983234','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('4897239874293','240','IE2983098','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('3298749239872','245','SK2983234','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('1948082039284','240','JI2983483','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('9238742289372','200','WE2983453','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('3497859238297','200','IJ3982342','EF1001','2017-03-27')");
+executePlainSQL("insert into ticket_has values('2058028409280','300','RW2423453','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('2319048029182','300','CE2094323','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('4328957893452','300','EW2094234','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('2459798248975','300','QA6613188','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('4378932578922','345','NH2938345','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('2389749873242','315','FG2933593','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('2895798347529','324','SF2933493','EF1002','2017-03-29')");
+executePlainSQL("insert into ticket_has values('8978972924245','253','HG2348293','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('5798279824532','300','SD2648293','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('4329578932479','300','DF2755493','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('2345782430092','300','NG2938563','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('7624359793238','300','ER2933565','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('4235698732492','300','SD3456293','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('2439875982734','243','JH2745293','EF1001','2017-03-31')");
+executePlainSQL("insert into ticket_has values('2342499023202','235','DF2456293','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('3942589234345','234','JH2956493','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('3245878432924','300','DF2934593','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('2345349280435','300','JG2936453','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('2435809342823','300','HG2933453','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('9809534280524','245','SD2348293','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('3428975893274','300','SG2343593','EF1002','2017-04-01')");
+executePlainSQL("insert into ticket_has values('4239873429852','243','DG2956393','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('8798729345234','345','HG2945693','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('3427589734892','300','SD2945693','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('3427589723489','339','DF2934593','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('4238957349823','200','HG2934696','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('7897239482345','200','FG2933534','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('2340829938842','200','EI23432','EF1001','2017-04-03')");
+executePlainSQL("insert into ticket_has values('2459834327589','200','HG3564593','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('2435789342732','200','SD2456393','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('5843728957892','200','HG3454693','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('2345984327985','200','DF2945693','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('5432098509342','200','GF2356593','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('3245803942852','200','SF5645393','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('3248578934792','200','SD3456593','EF1002','2017-04-05')");
+executePlainSQL("insert into ticket_has values('5798324759823','240','FG2543493','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('8932475892342','240','AR6443293','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('2347598273243','240','RR7543293','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('5234850982430','240','WR4638293','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('2348590328422','240','WR9456983','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('2349589023489','240','SD2453332','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('8725498273455','240','TW3975642','EF1001','2017-04-07')");
+executePlainSQL("insert into ticket_has values('2438759823472','205','ER9563984','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5243502834092','205','SI2534432','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('2982982091832','205','SQ0263623','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5432580843923','205','SQ2452322','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5432524543923','205','SQ0263623','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5432523443923','205','SQ0263623','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5432580123923','205','SQ0263623','EF1002','2017-04-08')");
+executePlainSQL("insert into ticket_has values('5432580213923','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('5432140843923','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('3232580843923','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('4532580843923','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('5434380843923','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('1234213412342','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('5432580234122','205','SQ0263623','EF1001','2017-04-10')");
+executePlainSQL("insert into ticket_has values('5432513243923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('5432521342923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('5432582134923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('2342580843923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('5342330843923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('2345233343923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('5432435343923','250','SQ0263623','EF1002','2017-04-12')");
+executePlainSQL("insert into ticket_has values('5432580234533','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('5432582345333','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('3425234233923','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('6345453423923','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('5234523453323','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('6352342324923','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('5432345234923','160','SQ0263623','EF1001','2017-04-14')");
+executePlainSQL("insert into ticket_has values('6524352343923','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('3842435342282','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('2383245234012','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('2435234345842','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('6234432233998','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('2345323452923','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('5324532434234','160','SQ0263623','EF1002','2017-04-15')");
+executePlainSQL("insert into ticket_has values('7563242234923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('2343453454923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('5452345323923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('5463454232923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('6345253453923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('5434536345923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('5433456453923','150','SQ0263623','EF1001','2017-04-17')");
+executePlainSQL("insert into ticket_has values('2345345644923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('7563453345923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('2345324645923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('7456432532923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('9765363222923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('5436345634923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('2345345343923','200','SQ0263623','EF1002','2017-04-19')");
+executePlainSQL("insert into ticket_has values('7654353453923','200','SQ0263623','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('5463434534923','200','SQ0263623','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('5432634563923','200','SQ0263623','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('5432580354633','200','SQ0263623','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('5443560843923','200','SQ4652323','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('5423580843923','200','SQ7456423','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('4325258084393','200','SQ856724','EF1001','2017-04-21')");
+executePlainSQL("insert into ticket_has values('2345234084393','220','SQ2435464','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('6532453243923','220','SQ0546324','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('7542340843923','220','SQ2453434','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('7464334843923','220','SQ0746564','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('5432635643923','220','SQ2354233','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('5432588433453','220','SQ4562342','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('5425435643543','220','SQ2314892','EF1002','2017-04-22')");
+
       OCICommit($db_conn);
+executePlainSQL("create table member_serve(
+userid    varchar2(30),
+password  varchar2(30),
+gender    varchar2(20),
+emailAddress  varchar2(50),
+passportNum  varchar2(30),
+nationality  varchar2(50),
+dob       date,
+name      varchar2(100),
+employNumber  int,
+primary key   (userid),
+foreign key(employNumber) references customerservice
+ON UPDATE CASCADE)");
+
+executePlainSQL("insert into member_serve values('acd123','cnoad','M','nbcsja@gmail.com','WO1029387','China',
+'1982-09-01','Hua Li','10012')");
+
+executePlainSQL("insert into member_serve values('cdf123','pnvae','F','novad@gmail.com','AK1827392','US',
+'1978-02-01','Adele Smith','10013')");
+
+executePlainSQL("insert into member_serve values('pmf123','nvaen','F','ncaedv@gmail.com','DU2984738','UK',
+'1996-02-21','Emma Waston','10014')");
+
+executePlainSQL("insert into member_serve values('abc234','vnpanvkef','F','ncoia@gmail.com','WI1992832','France',
+'1976-03-03','Taylor Evans','10015')");
+
+executePlainSQL("insert into member_serve values('chf133','Nvafdkl','M','nvoiae@gmail.com','SE2301829','Canada',
+'1999-01-01','Harry Evans','10016')");
+
+executePlainSQL("insert into member_serve values('eqw143','qweruo','M','dsfoui@gmail.com','WU3229832','China',
+'1982-02-09','Tameika Joly','10017')");
+
+executePlainSQL("insert into member_serve values('sfg234','qwufuo','M','wqeiy@gmail.com','EQ2938473','US',
+'1936-09-12','Karena Mcclaskey','10018')");
+
+executePlainSQL("insert into member_serve values('fwh134','qewryow','M','ewqroi@gmail.com','SS2983432','Canada',
+'1997-12-23','Dione Ammons','10019')");
+
+executePlainSQL("insert into member_serve values('hsf452','qerywe','M','qwehfi@gmail.com','SI2938293','China',
+'1989-05-23','Shae Fitton','10020')");
+ OCICommit($db_conn);
 
 
       executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
