@@ -13,40 +13,49 @@
 		<div class="wrapper">
 
 			<h1 class="branding-title"><a href="/">Personal Media Library</a></h1>
+        <div class="container">
+          <div class="row">
 
-      <div class="container">
-        <div class="row">
+            <form method="POST" action="members.php">
 
-          <div class="control-group col-sm-2">
-            <div class="controls">
-              <input type="text" id="inputEmail" placeholder="user name">
+            <div class="control-group col-sm-2">
+              <div class="controls">
+                <input type="text" name="userID" id="inputEmail" placeholder="user name">
+              </div>
             </div>
-          </div>
 
-          <div class="control-group col-sm-2">
-            <div class="controls">
-              <input type="password" id="inputPassword" placeholder="password">
+            <div class="control-group col-sm-2">
+              <div class="controls">
+                <input type="password" id="inputPassword" placeholder="password">
+              </div>
             </div>
-          </div>
 
-          <div class="control-group col-sm-2">
-            <div class="controls">
-              <button type="submit" class="btn btn-primary">login as member</button>
+            <div class="control-group col-sm-2">
+              <div class="controls">
+                <input type="submit" class="btn btn-primary" value="login as member" name="member">
+              </div>
+              <div class="controls">
+                <input type="submit" class="btn btn-primary" value="login as staff" name="staff">
+              </div>
             </div>
-            <div class="controls">
-              <button type="submit" class="btn btn-primary">login as staff</button>
-            </div>
-          </div>
 
-          <div class="control-group col-sm-2">
-            <div class="controls">
-              <button type="submit" class="btn btn-primary">login as agent</button>
+            <div class="control-group col-sm-2">
+              <div class="controls">
+                <input type="submit" class="btn btn-primary" value="login as agent" name="agent">
+              </div>
+
             </div>
-            <div class="controls">
-              <button type="submit" class="btn btn-primary">Apply Membership</button>
-            </div>
-          </div>
+      </form>
+
+      <form method="POST" action="member_application.php">
+        <div class="controls">
+          <button type="submit" class="btn btn-primary">Apply Membership</button>
         </div>
+      </form>
+
+        </div>
+
+
       </div>
 		</div>
 
@@ -112,8 +121,14 @@
             <input type="password" id="inputPassword" placeholder="month">
           </div>
         </div>
+
+
       </div>
     </div>
+
+
+
+
 
     <div class="control-group">
       <div class="controls">
