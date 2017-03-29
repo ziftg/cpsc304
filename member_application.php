@@ -9,6 +9,7 @@
   <body>
 
     <h2 style="text-align: center;">Membership Application</h2>
+    <div align="center">
     <form action="mainpage.php">
       <input type="submit" value="Back">
     </form>
@@ -43,7 +44,7 @@
       <p><input type="submit" value="Apply" name="applyMembership"></p>
 
     </form>
-】
+    </div>
 
     <div class="wrapper">
       <!-- <h2>Eagle Fly</h2>
