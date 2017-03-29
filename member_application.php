@@ -11,7 +11,7 @@
     <h2 style="text-align: center;">Membership Application</h2>
     <div align="center">
     <form action="mainpage.php">
-      <input type="submit" value="Back">
+      <input type="submit"  class="btn btn-primary" value="Back">
     </form>
     <form method="POST" action="member_application.php">
       <p>User ID:
@@ -41,7 +41,7 @@
       <p>Date of Birth:
         <input type="text" placeholder="YYYY-MM-DD" name="dob" size="12">
       </p>
-      <p><input type="submit" value="Apply" name="applyMembership"></p>
+      <p><input type="submit" value="Apply"  class="btn btn-primary" name="applyMembership"></p>
 
     </form>
     </div>

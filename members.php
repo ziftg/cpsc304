@@ -133,7 +133,7 @@
               </select>
               <input type='hidden' name='userid2' size='6' value=$row[0]>
                <input type='hidden' name='name2' size='6' value=$row[1]>
-               <input type='submit' value='Detail' name='query5'>
+               <input type='submit' value='Detail' class='btn btn-primary' name='memberDetail'>
                </p>
 
                </form>"."</td></tr>"; 
@@ -142,78 +142,94 @@
 
       }
 
-      function printExample ($result) {
+      function printResultwinew($result) { //prints results from a select statement
+        //echo "<br>Got data from table workin:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Employee Number</th><th>name</th><th>flightnumber</th><th>date</th><th>Role</th></tr>";
+
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] . "</td><td>" . $row[8] ."</td><tr>"; //or just use "echo $row[0]"
+          echo "<tr><td>" . $row["EMPLOYNUMBER"] . "</td><td>" . $row["NAME"] ."</td><td>". $row["FLIGHTNUMBER"] ."</td><td>". $row["DATE1"]. "</td><td>" . $row["ROLE"] . "</td></tr>"; //or just use "echo $row[0]" 
         }
+        echo "</table>";
+      }
+
+      function printresultaircraft($result) { //prints results from a select statement
+        //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Aircraft Serial Number</th><th>Aircraft Type</th><th>Capacity</th>
+              <th>Actual Number of Passengers</th></tr>";
+
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] ."</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[1] . "</td><td>"; 
+        }
+        echo "</table>";    
       }
 
       function printMain() { //prints results from a select statement
-        echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
-        echo "<table class='table table-hover text-centered'>";
+        
         //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
 
         if (array_key_exists('member', $_POST)) {
-      		echo '
-          <div class="container vertical-center-row">
-            <div class="row">
-            <form>
-            <div class="control-group col-sm-8">
-              <div class="controls">
-                <input type="submit" class="btn btn-primary" value="login as member" name="member">
-              </div>
-            </div>
+          echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+          echo "<table class='table table-hover text-centered'>";
+      		echo "
+          <div class='container vertical-center-row'>
+              <form>
+                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
 
-            <div class="control-group col-sm-2">
-              <div class="controls">
-                <input type="submit" class="btn btn-primary" value="login as member" name="member">
-              </div>
-            </div>
+                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='agent'></div>
 
-            </form>
-            </div>
-          </div>';
-          $employID = (int)$_POST['userID'];
-          $example = executePlainSQL("select * from member_serve where employNumber = $employID");
+                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
 
-          printExample($example);
+              </form>
+          </div>";
 
       	} else
       		if (array_key_exists('staff', $_POST)) {
-            echo '
-            <div class="container vertical-center-row">
-              <div class="row">
-              <form>
-              <div class="control-group col-sm-4">
-                <div class="controls">
-                  <input type="submit" class="btn btn-primary" value="login as member" name="member">
-                </div>
-              </div>
+            echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+            echo "<table class='table table-hover text-centered'>";
+            $employid = $_POST['userID'];
+            echo "
+            <div style='margin-left: 400' align='center'>
+              <form align='center' method='POST' action='members.php'>
+                <div class='row'>
+                  <div class='control-group col-sm-4'>
+                    <div class='controls'>
+                      <input type='hidden' value=$employid name='employID'>
+                      <input type='submit' class='btn btn-primary' value='Check Previous Tasks' name='previous'>
+                    </div>
 
-              <div class="control-group col-sm-3">
-                <div class="controls">
-                  <input type="submit" class="btn btn-primary" value="login as member" name="member">
+                    <div class='controls' style='margin-top: 30'>
+                      <input type='hidden' value=$employid name='employID'>
+                      <input type='submit' class='btn btn-primary' value='Check Future Tasks' name='future'>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group col-sm-2">
-                <div class="controls">
-                  <input type="text" id="inputEmail" placeholder="enter a flight ">
-                  <input type="text" id="inputEmail" placeholder="enter a flight ">
-                </div>
-              </div>
+                <div class='row' style='margin-top: 30' align='center'>
+                  <div class='control-group col-sm-4'>
+                    <label class='control-label' for='inputEmail'>Flight Number</label>
+                    <div class='controls'>
+                      <input type='text' name='flightno' placeholder='Enter a flight number'>
+                    </div>
 
-              <div class="control-group col-sm-1">
-                <div class="controls">
-                  <input type="submit" class="btn btn-primary" value="login as member" name="member">
+                    <label class='control-label' for='inputEmail' style='margin-top: 15'>Departure Date</label>
+                    <div class='controls'>
+                      <input type='text' name='date' placeholder='YYYY-MM-DD'>
+                    </div>
+                    
+                    <div class='controls' style='margin-top: 15'>
+                      <input type='submit' class='btn btn-primary' value='Check Aircraft' name='aircraft'>
+                    </div>
+                  </div>
                 </div>
-              </div>
               </form>
-              </div>
-            </div>';
+            </div>";
 
       		} else
       			if (array_key_exists('agent', $_POST)) {
+              echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+              echo "<table class='table table-hover text-centered'>";
               $eno=$_POST['userID'];
               $result = executePlainSQL("
                   select member_serve.userid as userid, member_serve.name as name 
@@ -232,7 +248,7 @@
         // $onboardstaff = executePlainSQL("select * from purchase");
         // printMain($onboardstaff);
         printMain();
-        if(array_key_exists('query5', $_POST)){
+        if(array_key_exists('memberDetail', $_POST)){
             $userid=$_POST['userid2'];
             $name=$_POST['name2'];
                    
@@ -243,6 +259,48 @@
                       where member_serve.userid=$userid");
                    printclientinfo($result);
         }
+
+        if(array_key_exists('previous', $_POST)){
+          echo "<h2 class='text-centered'>Previous Tasks for: ". $_POST['employID'] ."</h2>";
+          echo "<table class='table table-hover text-centered'>";
+          $number1=$_POST['employID'];
+          executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
+             from workin,onboardstaff,Flight_Use
+             where workin.employNumber=$number1 and 
+            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD<='01-APR-2017 00:00:00'");
+          printResultwinew($result);
+        }
+
+        if (array_key_exists('future', $_POST)){
+          echo "<h2 class='text-centered'>Future Tasks for: ". $_POST['employID'] ."</h2>";
+          echo "<table class='table table-hover text-centered'>";
+          $number1=$_POST['employID'];
+          executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+          $result = executePlainSQL("
+           select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
+             from workin,onboardstaff,Flight_Use
+             where workin.employNumber=$number1 and 
+            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
+          printResultwinew($result);
+        }
+
+        if (array_key_exists('aircraft', $_POST)){
+          $fno=$_POST['flightno'];
+          $date=$_POST['date']; 
+          echo "<h2 class='text-centered'>Aircraft Information for: ". $fno ."</h2>";
+          echo "<table class='table table-hover text-centered'>";
+           
+          $result = executePlainSQL("
+                  select Flight_Use.aircraftSerialNo as sno, Flight_Use.numOfPassengers as nop,
+                          AirCraft.type as type, AirCraft.capacity as cap
+                  from Flight_Use, AirCraft
+                  where Flight_Use.aircraftSerialNo=AirCraft.serialNo and Flight_Use.flightNumber='$fno' and Flight_Use.departureDate='$date'");
+          printresultaircraft($result);
+
+        }
+
+
       }
       ?>
 
