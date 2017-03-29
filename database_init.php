@@ -1286,6 +1286,9 @@ executePlainSQL("insert into ticket_has values('5425435643543','220','SQ2314892'
 executePlainSQL("insert into member_serve values('acd123','cnoad','M','nbcsja@gmail.com','WO1029387','China',
 '1982-09-01','Hua Li','1012')");
 
+executePlainSQL("insert into member_serve values('cc666','123456','M','cc666@gmail.com','AA4646464','US',
+'1988-05-16','Avatar Chen','1012')");
+
 executePlainSQL("insert into member_serve values('cdf123','pnvae','F','novad@gmail.com','AK1827392','US',
 '1978-02-01','Adele Smith','1013')");
 

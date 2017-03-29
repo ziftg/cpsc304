@@ -66,7 +66,7 @@
   </div>
 
 
-  <form class="form-horizontal">
+  <form class="form-horizontal" action="mainpage.php" method="POST">
 
 
     <div class="container">
@@ -77,14 +77,14 @@
         <div class="control-group col-sm-4">
           <label class="control-label" for="inputEmail">Flight Number</label>
           <div class="controls">
-            <input type="text" id="inputEmail" placeholder="enter a flight ">
+            <input type="text" name="flightno" placeholder="Enter a flight number">
           </div>
         </div>
 
         <div class="control-group col-sm-4">
           <label class="control-label" for="inputPassword">Date</label>
           <div class="controls">
-            <input type="password" id="inputPassword" placeholder="YYYY-MM-DD">
+            <input type="text" name="dDate" placeholder="YYYY-MM-DD">
           </div>
         </div>
       </div>
@@ -95,30 +95,30 @@
           <h4>or search by</h4>
         </div>
         <div class="control-group col-sm-2">
-          <label class="control-label" for="inputEmail">Arrival</label>
+          <label class="control-label" for="inputEmail">Departure Airport</label>
           <div class="controls">
-            <input type="text" id="inputEmail" placeholder="enter a flight ">
+            <input type="text" name="dAirport" placeholder="Enter 3-letter Code">
           </div>
         </div>
 
         <div class="control-group col-sm-2">
-          <label class="control-label" for="inputPassword">Departure</label>
+          <label class="control-label" for="inputPassword">Arrival Airport</label>
           <div class="controls">
-            <input type="password" id="inputPassword" placeholder="year">
+            <input type="password" name="aAirport" placeholder="Enter 3-letter Code">
           </div>
         </div>
 
         <div class="control-group col-sm-2">
           <label class="control-label" for="inputPassword">From Date</label>
           <div class="controls">
-            <input type="password" id="inputPassword" placeholder="asdf">
+            <input type="text" name="fromDate" placeholder="YYYY-MM-DD">
           </div>
         </div>
 
         <div class="control-group col-sm-2">
           <label class="control-label" for="inputPassword">To Date</label>
           <div class="controls">
-            <input type="password" id="inputPassword" placeholder="month">
+            <input type="text" name="toDate" placeholder="YYYY-MM-DD">
           </div>
         </div>
 
@@ -132,9 +132,118 @@
 
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn btn-primary">Check Availability</button>
+        <input type="submit" class="btn btn-primary" name="checkTicket" value="Check Availability"></input>
       </div>
     </div>
   </form>
 
 	<div id="content">
+  <?php
+  $db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost.ugrad.cs.ubc.ca)(PORT = 1522)))(CONNECT_DATA=(SID=ug)))";
+
+      $success = True; //keep track of errors so it redirects the page only if there are no errors
+      $db_conn = OCILogon("ora_f7l0b", "a32816143", $db);
+
+      function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
+        //echo "<br>running ".$cmdstr."<br>";
+        global $db_conn, $success;
+        $statement = OCIParse($db_conn, $cmdstr); //There is a set of comments at the end of the file that describe some of the OCI specific functions and how they work
+
+        if (!$statement) {
+          echo "<br>Cannot parse the following command: " . $cmdstr . "<br>";
+          $e = OCI_Error($db_conn); // For OCIParse errors pass the
+          // connection handle
+          echo htmlentities($e['message']);
+          $success = False;
+        }
+
+        $r = OCIExecute($statement, OCI_DEFAULT);
+        if (!$r) {
+          echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+          $e = oci_error($statement); // For OCIExecute errors pass the statementhandle
+          echo htmlentities($e['message']);
+          $success = False;
+        } else {
+
+        }
+        return $statement;
+
+      }
+
+
+      function executeBoundSQL($cmdstr, $list) {
+        /* Sometimes a same statement will be excuted for severl times, only
+         the value of variables need to be changed.
+         In this case you don't need to create the statement several times;
+         using bind variables can make the statement be shared and just
+         parsed once. This is also very useful in protecting against SQL injection. See example code below for       how this functions is used */
+
+        global $db_conn, $success;
+        $statement = OCIParse($db_conn, $cmdstr);
+
+        if (!$statement) {
+          echo "<br>Cannot parse the following command: " . $cmdstr . "<br>";
+          $e = OCI_Error($db_conn);
+          echo htmlentities($e['message']);
+          $success = False;
+        }
+
+        foreach ($list as $tuple) {
+          foreach ($tuple as $bind => $val) {
+            //echo $val;
+            //echo "<br>".$bind."<br>";
+            OCIBindByName($statement, $bind, $val);
+            unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
+
+          }
+          $r = OCIExecute($statement, OCI_DEFAULT);
+          if (!$r) {
+            echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+            $e = OCI_Error($statement); // For OCIExecute errors pass the statementhandle
+            echo htmlentities($e['message']);
+            echo "<br>";
+            $success = False;
+          }
+        }
+
+      }
+
+      function printflightinfo($result) { //prints results from a select statement
+        //echo "<br> CLIENTS INFO<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Flight Number</th><th>Departure Date</th><th>Price</th><th>Arrival Airport</th>
+        <th>Departure Airport</th><th>ETD</th>
+        <th>ETA</th><th>Action</th></tr>";
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] ."</td><td>" . $row[1]."</td><td>".
+          $row[3]."</td><td>".
+          $row[4]."</td><td>".
+          $row[5]."</td><td>".
+          $row[6]."</td><td>".
+          $row[7]."</td><td>".
+          "<form method='POST' action='purchase_ticket.php'>
+              <p> <input type='hidden' name='flightNo' size='6' value=$row[0]>
+                  <input type='hidden' name='departureDate' size='6' value=$row[1]>
+                  <input type='submit' name='purchase' class='btn btn-primary' value='purchase'>
+              </p>
+            </form>"."</td></tr>"; 
+        }
+        echo "</table>";    
+      }
+
+      if ($db_conn) {
+        if(array_key_exists('checkTicket', $_POST)){
+            $flightno=$_POST['flightno'];
+            $ddate=$_POST['dDate']; 
+            $result=executePlainSQL("select * 
+                                      from Flight_Use
+                                      where Flight_Use.flightNumber='$flightno' and Flight_Use.departureDate='$ddate'");
+            executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+            printflightinfo($result);
+
+        }
+      }
+  ?>
+  </div>
+  </body>
+  </html>

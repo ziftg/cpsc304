@@ -396,6 +396,10 @@ textarea {
     *vertical-align: middle; /* 3 */
 }
 
+select {
+    margin-top: 0;
+}
+
 input {
   color: black;
 }

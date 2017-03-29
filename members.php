@@ -101,6 +101,47 @@
 
       }
 
+
+      function printclientinfo($result) { //prints results from a select statement
+         // echo "<br>Got data from table onboardstaff:<br>";
+          echo "<table>";
+          echo "<tr><th>ID</th><th>Name</th><th>password</th></tr>";
+
+          while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] ."</td><td>". $row[2] ."</td><td>" . $row[3]."</td><td>" . $row[4]."</td><td>" . $row[5]."</td><td>" . $row[6]."</td></tr>" ; //or just use "echo $row[0]"
+          }
+          echo "</table>";
+
+        }
+
+      function printclient($result) { //prints results from a select statement
+        //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
+        echo "<table class='table table-hover text-centered'>";
+        echo "<tr><th>Client Id</th><th>Client Name</th></th><th>Actions</th></tr>";
+
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] ."</td><td>".$row[1]."</td><td>"."<form method='POST',action='database_init.php'>
+              <p>
+              <select name='InfoType'>
+              <option value='' disabled selected>Select Information Type</option>
+              <option value='history'>All Purchase History</option>
+              <option value='min'>Cheapest Ticket Purchased</option>
+              <option value='max'>Most Expensice Ticket Purchased</option>
+              <option value='sum'>Total Money Spent</option>
+              <option value='count'>Total Number of Tickets Purchased</option>
+              <option value='Average'>Average Cost of Each Ticket</option>
+              </select>
+              <input type='hidden' name='userid2' size='6' value=$row[0]>
+               <input type='hidden' name='name2' size='6' value=$row[1]>
+               <input type='submit' value='Detail' name='query5'>
+               </p>
+
+               </form>"."</td></tr>"; 
+        }
+        echo "</table>"; 
+
+      }
+
       function printExample ($result) {
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
           echo "<tr><td>" . $row[0] . "</td><td>" . $row[8] ."</td><tr>"; //or just use "echo $row[0]"
@@ -110,7 +151,7 @@
       function printMain() { //prints results from a select statement
         echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
         echo "<table class='table table-hover text-centered'>";
-        echo "<tr><th>UserID</th><th>TicketID</th></tr>";
+        //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
 
         if (array_key_exists('member', $_POST)) {
       		echo '
@@ -173,8 +214,13 @@
 
       		} else
       			if (array_key_exists('agent', $_POST)) {
-              echo "<br> dropping agent <br>";
-      			}
+              $eno=$_POST['userID'];
+              $result = executePlainSQL("
+                  select member_serve.userid as userid, member_serve.name as name 
+                  from member_serve
+                  where member_serve.employNumber=$eno");
+              printclient($result);
+            }
 
 
         echo "</table>";
@@ -186,6 +232,17 @@
         // $onboardstaff = executePlainSQL("select * from purchase");
         // printMain($onboardstaff);
         printMain();
+        if(array_key_exists('query5', $_POST)){
+            $userid=$_POST['userid2'];
+            $name=$_POST['name2'];
+                   
+                $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
+                      as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+                      member_serve.dob as dob, member_serve.name as name
+                      from member_serve,
+                      where member_serve.userid=$userid");
+                   printclientinfo($result);
+        }
       }
       ?>
 
