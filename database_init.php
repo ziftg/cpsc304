@@ -1279,6 +1279,11 @@ executePlainSQL("insert into ticket_has values('7464334843923','220','SQ0746564'
 executePlainSQL("insert into ticket_has values('5432635643923','220','SQ2354233','EF1002','2017-04-22')");
 executePlainSQL("insert into ticket_has values('5432588433453','220','SQ4562342','EF1002','2017-04-22')");
 executePlainSQL("insert into ticket_has values('5425435643543','220','SQ2314892','EF1002','2017-04-22')");
+executePlainSQL("insert into ticket_has values('3459827938294','220','WO1029387','EF1002','2017-04-23')");
+executePlainSQL("insert into ticket_has values('3234879852739','234','WO1029387','EF1003','2017-04-24')");
+executePlainSQL("insert into ticket_has values('6453098482303','534','WO1029387','EF1004','2017-04-25')");
+executePlainSQL("insert into ticket_has values('3457298345798','345','WO1029387','EF1005','2017-04-26')");
+executePlainSQL("insert into ticket_has values('2534798792348','453','WO1029387','EF1006','2017-04-27')");	    
 
       //OCICommit($db_conn);
 
