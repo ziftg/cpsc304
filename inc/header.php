@@ -122,6 +122,12 @@
           </div>
         </div>
 
+        <div class="control-group col-sm-2">
+          <label class="control-label" for="inputPassword">Order by</label>
+          <div class="controls">
+            <select type="text" name="toDate" placeholder="YYYY-MON-DD">
+          </div>
+        </div>
 
       </div>
     </div>

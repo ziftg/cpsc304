@@ -183,7 +183,7 @@ if ($db_conn) {
                             flightNumber varchar2(6),
   													departureDate varchar2(10),
   													aircraftSerialNo varchar2(8),
-  													ticketPrice number,
+  													ticketPrice int,
   													arrivalAirport varchar2(3),
   													departureAirport varchar2(3),
   													ETD timestamp,

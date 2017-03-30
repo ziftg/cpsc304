@@ -59,8 +59,8 @@ if(array_key_exists('query11', $_POST)){
              
                 //$tp1 = executePlainSQL("select dbms_random.value(200,500) num from dual");
                 //$tp1 = OCI_Fetch_Array($tp1, OCI_BOTH)[0];
-               $ti1=mt_rand(10000,9999999);
-               $tp1=mt_rand(200,500);
+               $ti1=mt_rand(1000000000000,9999999999999);
+               $tp1=mt_rand(300,500);
                
               executePlainSQL("insert into ticket_has values ('$ti1','$tp1','$ppn1','$fn2','$dt2')"); 
                 OCICommit($db_conn);
