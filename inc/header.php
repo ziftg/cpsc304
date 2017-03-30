@@ -122,6 +122,15 @@
           </div>
         </div>
 
+        <div class="control-group col-sm-2">
+          <label for="sel1">Order By:</label>
+            <select class="form-control" id="sel1">
+              <option value="">date</option>
+              <option value="order by ticketPrice">price low to high</option>
+              <option value="order by ticketPrice DESC">price high to low</option>
+            </select>
+        </div>
+
 
       </div>
     </div>
@@ -226,21 +235,21 @@
                   <input type='hidden' name='departureDate' size='6' value=$row[1]>
                   <input type='submit' name='purchase' class='btn btn-primary' value='purchase'>
               </p>
-            </form>"."</td></tr>"; 
+            </form>"."</td></tr>";
         }
-        echo "</table>";    
+        echo "</table>";
       }
 
       if ($db_conn) {
         if(array_key_exists('checkTicket', $_POST)){
-            if (($_POST['flightno'] == NULL || $_POST['dDate'] == NULL) && 
-                ($_POST['dAirport'] == NULL || $_POST['aAirport'] == NULL || 
+            if (($_POST['flightno'] == NULL || $_POST['dDate'] == NULL) &&
+                ($_POST['dAirport'] == NULL || $_POST['aAirport'] == NULL ||
                   $_POST['fromDate'] == NULL || $_POST['toDate'] == NULL)) {
               echo "<script>alert('Oops! Not enough information for searching:(')</script>";
             } else if ($_POST['flightno'] != NULL || $_POST['dDate'] != NULL) {
               $flightno=$_POST['flightno'];
-              $ddate=$_POST['dDate']; 
-              $result=executePlainSQL("select * 
+              $ddate=$_POST['dDate'];
+              $result=executePlainSQL("select *
                                       from Flight_Use
                                       where Flight_Use.flightNumber='$flightno' and Flight_Use.departureDate='$ddate'");
               executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -250,7 +259,7 @@
               executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
               $dairport=$_POST['dAirport'];
               $aairport=$_POST['aAirport'];
-              $date1=$_POST['fromDate']; 
+              $date1=$_POST['fromDate'];
               $timestamp1= executePlainSQL("SELECT TO_TIMESTAMP('$date1','YYYY-MON-DD') FROM dual");
 
               $date2=$_POST['toDate'];
@@ -260,9 +269,9 @@
               $time2 = OCI_Fetch_Array($timestamp2, OCI_BOTH);
 
               $result=executePlainSQL("
-                      select * 
+                      select *
                       from Flight_Use
-                      where Flight_Use.departureAirport='$dairport' and Flight_Use.arrivalAirport='$aairport' and 
+                      where Flight_Use.departureAirport='$dairport' and Flight_Use.arrivalAirport='$aairport' and
                         Flight_Use.ETD>= '$time1[0]' and Flight_Use.ETD<= '$time2[0]'");
               printflightinfo($result);
 
