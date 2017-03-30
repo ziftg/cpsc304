@@ -498,6 +498,19 @@
           echo "<div align='center'>
                   <form action='members.php' method='POST'>
                     <input type='hidden' name='userid' value=$userid>
+                    <p>Passport Number: 
+                      <input type='text' name='passport'>
+                    </p>
+                    <p>New User ID: 
+                      <input type='text' name='newid'>
+                    </p>
+                    <p>
+                      <input type='submit' name='changeid' class='btn btn-primary' value='Change User ID'>
+                    </p>
+                  </form>
+
+                  <form action='members.php' method='POST'>
+                    <input type='hidden' name='userid' value=$userid>
                     <p>Old Password: 
                       <input type='password' name='oldpassword'>
                     </p>
@@ -549,6 +562,13 @@
           executePlainSQL("update member_serve set member_serve.emailAddress='$email' where member_serve.userid ='$userid'");
           OCICommit($db_conn);
           echo "<script>alert('You have successfully changed your email.')</script>";
+        }
+
+        if (array_key_exists('changid', $_POST)){
+          $id10=$_POST['passport'];
+          $uid10=$_POST['newid'];
+          $result=executePlainSQL("
+                 create or replace trigger alter_id_trigger before update on member_serve begin set member_serve.userid='$uid10' where member_serve.passportNumber ='$id10' end");
         }
 
         if(array_key_exists('myAgent', $_POST)){

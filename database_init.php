@@ -401,7 +401,7 @@ if ($db_conn) {
   			":dApt" => "SFO",
   			":ETD" => "05-APR-2017 17:25:00",
   			":ETA" => "05-APR-2017 19:50:00",
-  			":ATD" => NULL,
+  			":ATD" => -,
   			":ATA" => NULL,
   			":nop" => 261
   		);
@@ -565,49 +565,7 @@ if ($db_conn) {
   		);
   		executeBoundSQL("insert into Flight_Use values (:fn, :dDate, :sno, :price, :aApt, :dApt, :ETD, :ETA, :ATD, :ATA, :nop)", $allA);
 
-executePlainSQL(
-"insert into customerservice values('1001', 'Amanda Smith','amanda1001')");
-executePlainSQL(
-"insert into customerservice values('1002', 'Paul Jones','paul1002')");
-executePlainSQL(
-"insert into customerservice values('1003', 'Daniel Radcliffee','daniel1003')");
- executePlainSQL(
-"insert into customerservice values('1004', 'Tom Felton','tom1004')");
- executePlainSQL(
-"insert into customerservice values('1005', 'Chris Brown','chris1005')");
- executePlainSQL(
-"insert into customerservice values('1006', 'Alice Stone','alice1006')");
- executePlainSQL(
-"insert into customerservice values('1007', 'Charlie Smith','charlie1007')");
- executePlainSQL(
-"insert into customerservice values('1008', 'Peter Liu','peter1008')");
- executePlainSQL(
-"insert into customerservice values('1009', 'Lily Potter','lily1009')");
- executePlainSQL(
-"insert into customerservice values('1010', 'Jinny Potter','jinny1010')");
- executePlainSQL(
-"insert into customerservice values('1011', 'Hua Li','hua1011')");
- executePlainSQL(
-"insert into customerservice values('1012', 'Suzy Elizabeth','suzy1012')");
- executePlainSQL(
-"insert into customerservice values('1013', 'Hazel Xiang','hazel1013')");
- executePlainSQL(
-"insert into customerservice values('1014', 'Yang Li','yang1014')");
- executePlainSQL(
-"insert into customerservice values('1015', 'Louis Wang','louis1015')");
- executePlainSQL(
-"insert into customerservice values('1016', 'Kevin Liu','kevin1016')");
- executePlainSQL(
-"insert into customerservice values('1017', 'Charlotte Zhen','charlotte1017')");
- executePlainSQL(
-"insert into customerservice values('1018', 'Annie Lee','annie1018')");
- executePlainSQL(
-"insert into customerservice values('1019', 'Leo Driedger','leo1019')");
- executePlainSQL(
-"insert into customerservice values('1020', 'Leo Xia','leo1020')");
- executePlainSQL(
-"insert into customerservice values('1021', 'Adagio Liu','adagio1021')"
-);
+o
 
 // executePlainSQL("Drop table onboardstaff");
 
@@ -875,19 +833,15 @@ values('2002','EF1002','2017-04-05')");
 executePlainSQL("
 insert into workin
 values('2003','EF1002','2017-04-05')");
-
 executePlainSQL("
 insert into workin
 values('2004','EF1002','2017-04-05')");
 executePlainSQL("
-
 insert into workin
 values('2005','EF1002','2017-04-05')");
 executePlainSQL("
-
 insert into workin
 values('2006','EF1002','2017-04-05')");
-
 executePlainSQL("
 insert into workin
 values('2007','EF1002','2017-04-05')");
@@ -1315,17 +1269,6 @@ executePlainSQL("insert into member_serve values('fwh134','qewryow','M','ewqroi@
 executePlainSQL("insert into member_serve values('hsf452','qerywe','M','qwehfi@gmail.com','SI2938293','China',
 '1989-05-23','Shae Fitton','1020')");
  OCICommit($db_conn);
-
-
-      //executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-    	// $test = executePlainSQL("select * from Flight_Use");
-      // $things = executePlainSQL("select * from customerservice");
-      //$work = executePlainSQL("select * from workin");
-    	// printResult($things);
-      //$onboardstaff = executePlainSQL("select * from onboardstaff");
-      // printResultwi($work);
-      // printResultob($onboardstaff);
-      // printResultp($fuck);
 
 } 
 }
