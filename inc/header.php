@@ -130,8 +130,6 @@
               <option value="order by ticketPrice DESC">price high to low</option>
             </select>
         </div>
-
-
       </div>
     </div>
 

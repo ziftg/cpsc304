@@ -115,9 +115,7 @@
       // // Connect Oracle...
       if ($db_conn) {
         if (array_key_exists('memberDetail', $_POST)) {
-
-            //echo "<h2 class='text-centered'>Previous Tasks for: ". $_POST['employID'] ."</h2>";
-            //echo "<table class='table table-hover text-centered'>";
+          
           $userid=$_POST['clientid'];
 
           if ($_POST['InfoType'] == 'history') {

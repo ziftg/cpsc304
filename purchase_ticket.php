@@ -20,17 +20,8 @@
       <p>Departure Date:
         <input type="text" name="dDate" value="<?php echo $_POST['departureDate'] ?>" readonly="readonly">
       </p>
-      <p>Confirm Password:
-        <input type="Password" name="password2" size="12">
-      </p>
       <p>Full Name:
         <input type="text" name="name" size="12">
-      </p>
-      <p>Gender:
-        <input type="text" placeholder="M/F" name="gender" size="12">
-      </p>
-      <p>email:
-        <input type="text" placeholder="1234567@abc.com" name="email" size="18">
       </p>
       <p>Passport Number:
         <input type="text" placeholder="AA12345678" name="passport" size="12">
@@ -38,8 +29,11 @@
       <p>Nationality:
         <input type="text" name="nationality" size="12">
       </p>
-      <p>Date of Birth:
-        <input type="text" placeholder="YYYY-MM-DD" name="dob" size="12">
+      <p>Gender:
+        <input type="text" placeholder="M/F" name="gender" size="12">
+      </p>
+      <p>email:
+        <input type="text" placeholder="1234567@abc.com" name="email" size="18">
       </p>
       <p><input type="submit" class="btn btn-primary" value="Confirm and Purchase" name="buy"></p>
 
@@ -128,43 +122,35 @@
 
       }
 
+      function printresultidprice($result) { //prints results from a select statement
+
+        $row = OCI_Fetch_Array($result, OCI_BOTH);
+        echo "<script> alert('Congratulation! Your purchase is successful!\nTicket ID: " . $row[0] .
+              "\nPrice: CAD" . $row[1] . "\nThank you!')</script>";    
+      }
+
       // // Connect Oracle...
       if ($db_conn) {
 
-        if (array_key_exists('applyMembership', $_POST)) {
-            if ($_POST['userID'] == NULL || $_POST['name'] == NULL || $_POST['gender'] == NULL ||
-                $_POST['passport'] == NULL || $_POST['email'] == NULL || $_POST['nationality'] == NULL ||
-                $_POST['dob'] == NULL) {
-              echo "<script> alert('All fields must not be empty.') </script>";
-            }
-            else if ($_POST['password1'] != $_POST['password2']) {
-              echo "<script> alert('Password Not match.') </script>";
-            }
-            else {
-              $employID = rand(1000, 1021);
-              $userid = $_POST['userID'];
-              $tuple = array (
-                ":a" => $_POST['userID'],
-                ":b" => $_POST['password'],
-                ":c" => $_POST['gender'],
-                ":d" => $_POST['email'],
-                ":e" => $_POST['passport'],
-                ":f" => $_POST['nationality'],
-                ":g" => $_POST['dob'],
-                ":h" => $_POST['name'],
-                ":k" => $employID 
-              );
-              $alltuples = array (
-                $tuple
-              );
-              executeBoundSQL("insert into member_serve values (:a, :b, :c, :d, :e, :f, :g, :h, :k)", $alltuples);
-              OCICommit($db_conn);
-              //$new_member = executePlainSQL("select * from member_serve");
-              //printExample($new_member);
-              echo "<script> alert('Congratulation! You are our member now') </script>";
-            }
+        if(array_key_exists('buy', $_POST)){
+            $fno=$_POST['fno'];
+            $ddate=$_POST['dDate'];
+            $pno=$_POST['passport']; 
 
-      }
+            $ticketid=mt_rand(1000000000000,9999999999999);
+            $temp=executePlainSQL("select ticketPrice from Flight_Use where flightNumber='$fno'and departureDate='$ddate'");
+            $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
+            $price = $temp2[0];
+               
+            executePlainSQL("insert into ticket_has values ('$ticketid','$price','$pno','$fno','$ddate')"); 
+            OCICommit($db_conn);
+            $result =  executePlainSQL("select ticket_has.ticketID, ticket_has.ticketPrice from ticket_has where ticket_has.passportNumber = '$pno' and ticket_has.flightNumber =  '$fno' and ticket_has.dateorg = '$ddate'");
+            //printresultidprice($result); 
+            $row = OCI_Fetch_Array($result, OCI_BOTH);
+            echo "<script> alert('Congratulation! Your purchase is successful! \\nTicket ID: " . $row[0] . "\\nPrice: CAD" .
+                  $row[1]. "Thank you!')</script>";
+        }
+
     }
       ?>
 

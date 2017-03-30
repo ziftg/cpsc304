@@ -287,7 +287,7 @@
         if (array_key_exists('aircraft', $_POST)){
           $fno=$_POST['flightno'];
           $date=$_POST['date']; 
-          echo "<h2 class='text-centered'>Aircraft Information for: ". $fno ."</h2>";
+          echo "<h3 class='text-centered'>Aircraft Information for: ". $fno ."</h3>";
           echo "<table class='table table-hover text-centered'>";
            
           $result = executePlainSQL("
