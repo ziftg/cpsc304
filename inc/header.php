@@ -140,6 +140,23 @@
     </div>
   </form>
 
+  <form class="form" action="mainpage.php" method="POST">
+
+    <div align="center" id="ticketId">
+      <label class="control-label" for="inputPassword">Manage My ID</label>
+      <div class="controls">
+        <input type="text" name="tpnm1" placeholder="Enter your ticket ID">
+      </div>
+    </div>
+
+
+    <div align="center">
+      <div class="controls">
+        <input type="submit" class="btn btn-primary" name="manageMyTicket" value="Manage My Ticket"></input>
+      </div>
+    </div>
+  </form>
+
 	<div id="content">
   <?php
   $db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost.ugrad.cs.ubc.ca)(PORT = 1522)))(CONNECT_DATA=(SID=ug)))";
@@ -234,6 +251,27 @@
         echo "</table>";
       }
 
+      function printresultticket($result){
+        if($result){
+          echo "<table class='table table-hover text-centered' style='color: black'>";
+          echo "<tr><th>Ticket ID</th><th>Ticket Price</th><th>Passport Number</th><th>Flight Number</th><th>Date</th></tr>";
+
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+           echo "<tr align='center'><td>".$row[0]."</td><td>".$row[1]."</td><td>".$row[2]."</td><td>".$row[3].
+            "</td><td>".$row[4]."</td></tr>" ;
+       }
+       echo "</table>";
+     } else {
+       echo "null";
+     }
+
+    }
+
+    function printreDefault(){
+      echo "<table>";
+      echo "</table>";
+    }
+
       if ($db_conn) {
         if(array_key_exists('checkTicket', $_POST)){
             if (($_POST['flightno'] == NULL || $_POST['dDate'] == NULL) &&
@@ -249,6 +287,7 @@
               executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
               printflightinfo($result);
             }
+
             else {
               executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
               $dairport=$_POST['dAirport'];
@@ -273,6 +312,10 @@
 
             }
 
+        } else if(array_key_exists('manageMyTicket', $_POST)){
+          $tid3=$_POST['tpnm1'];
+          $result = executePlainSQL("select * from ticket_has where ticket_has.ticketID='$tid3'");
+            printresultticket($result);
         }
       }
   ?>
