@@ -270,6 +270,14 @@ select case when count(*) > 0 then 1 else 0 end
                       </div>
                     </div>
                   </div>
+
+                  <div class='row' style='margin-top: 30'>
+                    <div class='control-group col-sm-4'>
+                      <div class='controls'>
+                        <input type='submit' class='btn btn-primary' value='Most Royal Members' name='division'>
+                      </div>
+                    </div>
+                  </div>
                 </form>
               </div>";
             }
@@ -388,6 +396,19 @@ select case when count(*) > 0 then 1 else 0 end
             workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
           printResultwinew($result);
         }
+
+        if (array_key_exists('division', $_POST)){
+          $result=executePlainSQL("select member_serve.name from member_serve where not exists (select Flight_Use.flightNumber from Flight_Use minus select ticket_has.flightNumber from ticket_has where ticket_has.passportNumber = member_serve.passportNum)");
+          echo "<h3 class='text-centered'>Most Royal Members: ". $_POST['employID'] ."</h3>";
+          echo "<table class='table table-hover text-centered' style='color: black'>";
+          echo "<tr><th>Member name</th></tr>";
+
+          while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            echo "<tr><td>" . $row[0] . "</td></tr>" ; //or just use "echo $row[0]"
+          }
+          echo "</table>";
+        }
+
 
         if (array_key_exists('stats', $_POST)){
           $result1= executePlainSQL("
