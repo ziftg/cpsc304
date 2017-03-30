@@ -65,11 +65,6 @@
 
 
       function executeBoundSQL($cmdstr, $list) {
-        /* Sometimes a same statement will be excuted for severl times, only
-         the value of variables need to be changed.
-         In this case you don't need to create the statement several times;
-         using bind variables can make the statement be shared and just
-         parsed once. This is also very useful in protecting against SQL injection. See example code below for       how this functions is used */
 
         global $db_conn, $success;
         $statement = OCIParse($db_conn, $cmdstr);
@@ -83,8 +78,7 @@
 
         foreach ($list as $tuple) {
           foreach ($tuple as $bind => $val) {
-            //echo $val;
-            //echo "<br>".$bind."<br>";
+
             OCIBindByName($statement, $bind, $val);
             unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
 
@@ -103,7 +97,6 @@
 
 
       function printclientinfo($result) { //prints results from a select statement
-         // echo "<br>Got data from table onboardstaff:<br>";
           echo "<table>";
           echo "<tr><th>ID</th><th>Name</th><th>password</th></tr>";
 
@@ -115,7 +108,6 @@
         }
 
       function printclient($result) { //prints results from a select statement
-        //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
         echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Client Id</th><th>Client Name</th></th><th>Actions</th></tr>";
 
@@ -142,7 +134,6 @@
       }
 
       function printResultwinew($result) { //prints results from a select statement
-        //echo "<br>Got data from table workin:<br>";
         echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Employee Number</th><th>name</th><th>flightnumber</th><th>date</th><th>Role</th></tr>";
 
@@ -153,7 +144,6 @@
       }
 
       function printresultaircraft($result) { //prints results from a select statement
-        //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
         echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Aircraft Serial Number</th><th>Aircraft Type</th><th>Capacity</th>
               <th>Actual Number of Passengers</th></tr>";
@@ -166,18 +156,15 @@
 
       function printMain() { //prints results from a select statement
 
-        //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
-
         if (array_key_exists('member', $_POST)) {
           $eid=$_POST['userID'];
           $password=$_POST['password'];
           $result = executePlainSQL("
-select case when count(*) > 0 then 1 else 0 end
- from member_serve
- where userid='$eid' and password='$password'");
-// $result = executePlainSQL("select * from member_serve");
+                                      select case when count(*) > 0 then 1 else 0 end
+                                       from member_serve
+                                       where userid='$eid' and password='$password'");
           $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
-          // echo $value;
+
           if(!$value) {
             echo "<script>alert('Oops! We cannot find you:(')</script>";
           }
@@ -196,6 +183,10 @@ select case when count(*) > 0 then 1 else 0 end
                       <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
 
                 </form>
+                <form method='POST' action='mainpage.php'>
+                  <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top: 30'></div>
+                </form>
+
             </div>";
           }
 
@@ -211,12 +202,12 @@ select case when count(*) > 0 then 1 else 0 end
             select case when count(*) > 0 then 1 else 0 end
             from onboardstaff
             where employNumber='$eid' and password='$password'");
-  // $result = executePlainSQL("select * from member_serve");
+
             $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
 
 
                      if(!$value){
-                       echo"wrong!";
+                       echo "<script>alert('Oops! We cannot find you:(')</script>";
                      }
             else
             {
@@ -279,6 +270,10 @@ select case when count(*) > 0 then 1 else 0 end
                     </div>
                   </div>
                 </form>
+
+                <form align='center' method='POST' action='mainpage.php'>
+                  <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top:'></div>
+                </form>
               </div>";
             }
 
@@ -292,11 +287,11 @@ select case when count(*) > 0 then 1 else 0 end
               select case when count(*) > 0 then 1 else 0 end
               from customerservice
               where employNumber='$eid' and password='$password'");
-    // $result = executePlainSQL("select * from member_serve");
+
               $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
 
               if(!$value)
-              {echo"wrong!";}
+              {echo "<script>alert('Oops! We cannot find you:(')</script>";}
               else
               {
                 echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
@@ -307,6 +302,9 @@ select case when count(*) > 0 then 1 else 0 end
                   from member_serve
                   where member_serve.employNumber=$eno");
               printclient($result);
+              echo "<form align='center' method='POST' action='mainpage.php'>
+                      <input type='submit' class='btn btn-primary' value='Back' style='margin-top:'>
+                    </form>";
             }
 
 
@@ -317,7 +315,7 @@ select case when count(*) > 0 then 1 else 0 end
       }
 
       function printPurchaseHistory($result) { //prints results from a select statement
-        // echo "<br>Got data from table onboardstaff:<br>";
+
         echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Ticket ID</th><th>Price</th><th>Flight Number</th><th>Departure Time</th><th>Arrival Time</th>
               <th>Departure Airport</th><th>Arrival Airport</th></tr>";
@@ -330,7 +328,7 @@ select case when count(*) > 0 then 1 else 0 end
       }
 
       function printAgent($result) { //prints results from a select statement
-        // echo "<br>Got data from table onboardstaff:<br>";
+
         echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Employee Number</th><th>Name</th></tr>";
 
@@ -357,19 +355,17 @@ select case when count(*) > 0 then 1 else 0 end
       // // Connect Oracle...
       if ($db_conn) {
         executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-        // $onboardstaff = executePlainSQL("select * from purchase");
-        // printMain($onboardstaff);
         printMain();
         if(array_key_exists('memberDetail', $_POST)){
             $userid=$_POST['userid2'];
             $name=$_POST['name2'];
-
-                $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
-                      as email,member_serve.passportNum as passport, member_serve.nationality as nationality,
+            $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, 
+                      member_serve.emailAddress as email,member_serve.passportNum as passport, 
+                      member_serve.nationality as nationality,
                       member_serve.dob as dob, member_serve.name as name
                       from member_serve,
                       where member_serve.userid=$userid");
-                   printclientinfo($result);
+            printclientinfo($result);
         }
 
         if(array_key_exists('previous', $_POST)){
@@ -377,10 +373,14 @@ select case when count(*) > 0 then 1 else 0 end
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
-             from workin,onboardstaff,Flight_Use
-             where workin.employNumber=$number1 and
-            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD<='01-APR-2017 00:00:00'");
+          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as 
+                                        name,workin.flightNumber as flightnumber,workin.dateorg as date1, 
+                                        onboardstaff.role as role
+                                        from workin,onboardstaff,Flight_Use
+                                        where workin.employNumber=$number1 and
+                                        workin.employNumber=onboardstaff.employNumber and 
+                                        Flight_Use.departureDate=workin.dateorg and 
+                                        Flight_Use.ETD<='01-APR-2017 00:00:00'");
           printResultwinew($result);
         }
 
@@ -389,22 +389,27 @@ select case when count(*) > 0 then 1 else 0 end
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-          $result = executePlainSQL("
-           select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
-             from workin,onboardstaff,Flight_Use
-             where workin.employNumber=$number1 and
-            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
+          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as 
+                                      name,workin.flightNumber as flightnumber,workin.dateorg as date1, 
+                                      onboardstaff.role as role 
+                                      from workin,onboardstaff,Flight_Use
+                                      where workin.employNumber=$number1 and
+                                      workin.employNumber=onboardstaff.employNumber and
+                                      Flight_Use.departureDate=workin.dateorg and 
+                                      Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
           printResultwinew($result);
         }
 
         if (array_key_exists('division', $_POST)){
+          echo "<h3 class='text-centered'>Most Royal Members</h3>";
+          echo "<table class='table table-hover text-centered'>";
           $result=executePlainSQL("select member_serve.name from member_serve where not exists (select Flight_Use.flightNumber from Flight_Use minus select ticket_has.flightNumber from ticket_has where ticket_has.passportNumber = member_serve.passportNum)");
-          echo "<h3 class='text-centered'>Most Royal Members: ". $_POST['employID'] ."</h3>";
+
           echo "<table class='table table-hover text-centered' style='color: black'>";
           echo "<tr><th>Member name</th></tr>";
 
           while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-            echo "<tr><td>" . $row[0] . "</td></tr>" ; //or just use "echo $row[0]"
+            echo "<tr><td>" . $row[0] . "</td></tr>";
           }
           echo "</table>";
         }

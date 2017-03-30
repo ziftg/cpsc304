@@ -51,19 +51,8 @@
     </div>
 
     <div class="wrapper">
-      <!-- <h2>Eagle Fly</h2>
-      <h3>Your travel compaion</h3> -->
 
-
-
-
-      <?php
-
-
-      
-
-      //this tells the system that it's no longer just parsing
-      //html; it's now parsing PHP
+    <?php
       $db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost.ugrad.cs.ubc.ca)(PORT = 1522)))(CONNECT_DATA=(SID=ug)))";
 
       $success = True; //keep track of errors so it redirects the page only if there are no errors
