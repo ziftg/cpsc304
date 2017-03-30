@@ -324,6 +324,19 @@ select case when count(*) > 0 then 1 else 0 end
 
       }
 
+      function printProfile($result1) { //prints results from a select statement
+       // echo "<br>Got data from table onboardstaff:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>User ID</th><th>Name</th><th>Gender</th><th>Passport Number</th><th>Nationality</th>
+              <th>Email</th><th>Date of Birth</th></tr>";
+
+        while ($row1 = OCI_Fetch_Array($result1, OCI_BOTH)) {
+          echo "<tr><td>" . $row1[0] . "</td><td>" . $row1[6] ."</td><td>". $row1[1] ."</td><td>" . $row1[3]."</td><td>" . $row1[4]."</td><td>" . $row1[2]. "</td><td>" . $row1[5]. "</td></tr>"; //or just use "echo $row[0]"
+        }
+        echo "</table>";
+
+      }
+
       // // Connect Oracle...
       if ($db_conn) {
         executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -397,6 +410,74 @@ select case when count(*) > 0 then 1 else 0 end
             printPurchaseHistory($result);
         }
 
+<<<<<<< HEAD
+=======
+        if (array_key_exists('profile', $_POST)){
+          $userid = $_POST['userid'];
+          echo "<h3 class='text-centered'>Change your Profile: ". $_POST['userid'] ."</h3>";
+          $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
+              as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+              member_serve.dob as dob, member_serve.name as name
+              from member_serve
+              where member_serve.userid='$userid'");
+          printProfile($result);
+          echo "<div align='center'>
+                  <form action='members.php' method='POST'>
+                    <input type='hidden' name='userid' value=$userid>
+                    <p>Old Password: 
+                      <input type='password' name='oldpassword'>
+                    </p>
+                    <p>New Password: 
+                      <input type='password' name='newpassword1'>
+                    </p>
+                    <p>New Password Confirm: 
+                      <input type='password' name='newpassword2'>
+                    </p>
+                    <p>
+                      <input type='submit' name='changepwd' class='btn btn-primary' value='Change Password'>
+                    </p>
+                  </form>
+
+                  <form action='members.php' method='POST'>
+                    <input type='hidden' name='userid' value=$userid>
+                    <p>New Email: 
+                      <input type='text' name='newemail'>
+                    </p>
+                    <p>
+                      <input type='submit' name='changeemail' class='btn btn-primary' value='Change Email'>
+                    </p>
+                  </form>
+                </div>";
+
+        }
+
+        if (array_key_exists('changepwd', $_POST)){
+          $userid=$_POST['userid'];
+          $passwordold=$_POST['oldpassword'];
+          $temp=executePlainSQL("select password from member_serve where userid='$userid'");
+          $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
+          $checkpwd = $temp2[0];
+          if ($checkpwd != $passwordold) {
+            echo "<script>alert('You entered a wrong password.')</script>";
+          } else if ($_POST['newpassword1'] != $_POST['newpassword2']) {
+            echo "<script>alert('Your new passwords do not match.')</script>";
+          } else {
+            $passwordnew=$_POST['newpassword1'];
+            executePlainSQL("update member_serve set member_serve.password='$passwordnew' where member_serve.userid ='$userid' and member_serve.password='$passwordold'");
+            OCICommit($db_conn);
+            echo "<script>alert('You have successfully changed your password.')</script>";
+          }
+        }
+
+        if (array_key_exists('changeemail', $_POST)){
+          $userid=$_POST['userid'];
+          $email=$_POST['newemail'];
+          executePlainSQL("update member_serve set member_serve.emailAddress='$email' where member_serve.userid ='$userid'");
+          OCICommit($db_conn);
+          echo "<script>alert('You have successfully changed your email.')</script>";
+        }
+
+>>>>>>> 5172fe5add99808a008ec463e27d5583ff4be656
         if(array_key_exists('myAgent', $_POST)){
           echo "<h3 class='text-centered'>Agent for: ". $_POST['userid'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
