@@ -169,21 +169,37 @@
         //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
 
         if (array_key_exists('member', $_POST)) {
-          echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
-          echo "<table class='table table-hover text-centered'>";
-          $userid = $_POST['userID'];
-      		echo "
-          <div class='container vertical-center-row'>
-              <form method='POST' action='members.php'>
-                    <input type='hidden' name='userid' value=$userid>
-                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
+          $eid=$_POST['userID'];
+          $password=$_POST['password'];
+          $result = executePlainSQL("
+select case when count(*) > 0 then 1 else 0 end
+ from member_serve
+ where userid='$eid' and password='$password'");
+// $result = executePlainSQL("select * from member_serve");
+          $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
+          // echo $value;
+          if(!$value) {
+            echo "<script>alert('Oops! Not enough information for searching:(')</script>";
+          }
+          else {
+            echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
+            echo "<table class='table table-hover text-centered'>";
+            $userid = $_POST['userID'];
+        		echo "
+            <div class='container vertical-center-row'>
+                <form method='POST' action='members.php'>
+                      <input type='hidden' name='userid' value=$userid>
+                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
 
-                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
+                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
 
-                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
+                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
 
-              </form>
-          </div>";
+                </form>
+            </div>";
+          }
+
+
 
       	} else
       		if (array_key_exists('staff', $_POST)) {
@@ -229,7 +245,18 @@
 
       		} else
       			if (array_key_exists('agent', $_POST)) {
-              echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
+
+              $eid=$_POST['userID'];
+              $password=$_POST['password'];
+              if(
+              executePlainSQL("
+              select case when count(*) > 0 then 1 else 0 end
+              from customerservice
+              where employNumber='$eid' and password='$password'")==0)
+              {echo"wrong!";}
+              else
+              {
+                echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
               echo "<table class='table table-hover text-centered'>";
               $eno=$_POST['userID'];
               $result = executePlainSQL("
@@ -237,6 +264,9 @@
                   from member_serve
                   where member_serve.employNumber=$eno");
               printclient($result);
+            }
+
+
             }
 
 

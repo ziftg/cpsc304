@@ -26,7 +26,7 @@
 
             <div class="control-group col-sm-2">
               <div class="controls">
-                <input type="password" id="inputPassword" placeholder="password">
+                <input type="password" name="password" id="inputPassword" placeholder="password">
               </div>
             </div>
 
