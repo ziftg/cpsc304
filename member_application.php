@@ -164,7 +164,7 @@
               $userid = $_POST['userID'];
               $tuple = array (
                 ":a" => $_POST['userID'],
-                ":b" => $_POST['password'],
+                ":b" => $_POST['password1'],
                 ":c" => $_POST['gender'],
                 ":d" => $_POST['email'],
                 ":e" => $_POST['passport'],
