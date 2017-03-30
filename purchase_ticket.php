@@ -35,6 +35,16 @@
       <p>email:
         <input type="text" placeholder="1234567@abc.com" name="email" size="18">
       </p>
+      <p>Are you a member?
+        <select name="member">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+        <input type="text" placeholder="If yes, Please enter your user ID" name="userid11" size="35">
+      </p>
+      <p>Password:
+        <input type="password" placehold="Enter your password" name="password11">
+      </p>
       <p><input type="submit" class="btn btn-primary" value="Confirm and Purchase" name="buy"></p>
 
     </form>
@@ -132,25 +142,48 @@
       // // Connect Oracle...
       if ($db_conn) {
 
-        if(array_key_exists('buy', $_POST)){
-            $fno=$_POST['fno'];
-            $ddate=$_POST['dDate'];
-            $pno=$_POST['passport']; 
-
-            $ticketid=mt_rand(1000000000000,9999999999999);
-            $temp=executePlainSQL("select ticketPrice from Flight_Use where flightNumber='$fno'and departureDate='$ddate'");
-            $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
-            $price = $temp2[0];
+        if (array_key_exists('buy', $_POST)) {
+        $flightno=$_POST['fno'];
+        $date=$_POST['dDate'];
+        $passportnumber=$_POST['passport']; 
+        $ticketid=mt_rand(1000000000000,9999999999999);           
+        $temp=executePlainSQL("select ticketPrice from Flight_Use where flightNumber='$flightno'and departureDate='$date'");
+        $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
+        $price = $temp2[0];
                
-            executePlainSQL("insert into ticket_has values ('$ticketid','$price','$pno','$fno','$ddate')"); 
-            OCICommit($db_conn);
-            $result =  executePlainSQL("select ticket_has.ticketID, ticket_has.ticketPrice from ticket_has where ticket_has.passportNumber = '$pno' and ticket_has.flightNumber =  '$fno' and ticket_has.dateorg = '$ddate'");
-            //printresultidprice($result); 
-            $row = OCI_Fetch_Array($result, OCI_BOTH);
-            echo "<script> alert('Congratulation! Your purchase is successful! \\nTicket ID: " . $row[0] . "\\nPrice: CAD" .
-                  $row[1]. "\\nThank you!')</script>";
-        }
+               
+        if(isset($_POST['member'])){
+          $member = $_POST['member'];
+          switch ($member) {
+            case 'yes':
+              $userid=$_POST['userid11'];
+              $password=$_POST['password11'];
+              $result=executePlainSQL("
+                  select case when count(*) > 0 then 1 else 0 end 
+                  from member_serve
+                  where userid='$userid' and password='$password'");
+              $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
+              if(!$value)
+                {
+                  echo"<script>alert('Wrong ID Password Combination!')</script>";
+                }
+              else {
+                executePlainSQL("insert into ticket_has values ('$ticketid','$price','$passportnumber','$flightno','$date')");
+                executePlainSQL("insert into purchase values ('$userid','$ticketid')");
+                OCICommit($db_conn);
+                echo "<script>alert('Success!')</script>";
+              }
+            break;
+            case 'no':
+              executePlainSQL("insert into ticket_has values ('$ticketid','$price','$passportnumber','$flightno','$date')");
+              OCICommit($db_conn);
+              echo "<script>alert('Success!')</script>";
+            break;
+          }
 
+        }
+        }
+          
     }
       ?>
 

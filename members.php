@@ -29,11 +29,7 @@
       <!-- <h2>Eagle Fly</h2>
       <h3>Your travel compaion</h3> -->
       <?php
-      echo "<div class='container vertical-center-row'>
-          <form method='POST' action='mainpage.php'>
-                <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='back' name='profile'></div>
-          </form>
-      </div>";
+
       //this tells the system that it's no longer just parsing
       //html; it's now parsing PHP
       $db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost.ugrad.cs.ubc.ca)(PORT = 1522)))(CONNECT_DATA=(SID=ug)))";
@@ -220,7 +216,7 @@ select case when count(*) > 0 then 1 else 0 end
 
 
                      if(!$value){
-                       echo"<script>alert('Oops! We cannot find you:(')</script>";
+                       echo"wrong!";
                      }
             else
             {
@@ -292,7 +288,7 @@ select case when count(*) > 0 then 1 else 0 end
               $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
 
               if(!$value)
-              {echo"<script>alert('Oops! We cannot find you:(')</script>";}
+              {echo"wrong!";}
               else
               {
                 echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
@@ -328,10 +324,10 @@ select case when count(*) > 0 then 1 else 0 end
       function printAgent($result) { //prints results from a select statement
         // echo "<br>Got data from table onboardstaff:<br>";
         echo "<table class='table table-hover text-centered' style='color: black'>";
-        echo "<tr><th>Customer Service Agent</th></tr>";
+        echo "<tr><th>Employee Number</th><th>Name</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] . "</td></tr>" ; //or just use "echo $row[0]"
+          echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>" ; //or just use "echo $row[0]"
         }
         echo "</table>";
 
@@ -464,8 +460,6 @@ select case when count(*) > 0 then 1 else 0 end
             printPurchaseHistory($result);
         }
 
-<<<<<<< HEAD
-=======
         if (array_key_exists('profile', $_POST)){
           $userid = $_POST['userid'];
           echo "<h3 class='text-centered'>Change your Profile: ". $_POST['userid'] ."</h3>";
@@ -531,12 +525,11 @@ select case when count(*) > 0 then 1 else 0 end
           echo "<script>alert('You have successfully changed your email.')</script>";
         }
 
->>>>>>> 5172fe5add99808a008ec463e27d5583ff4be656
         if(array_key_exists('myAgent', $_POST)){
-          echo "<h3 class='text-centered'>Agent for: ". $_POST['userid'] ."</h3>";
+          echo "<h3 class='text-centered'>Custormer Service Agent for: ". $_POST['userid'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
           $userid=$_POST['userid'];
-          $result=executePlainSQL("select customerservice.name
+          $result=executePlainSQL("select customerservice.employNumber, customerservice.name
                                       from member_serve, customerservice
                                       where member_serve.userid='$userid' and
                                             member_serve.employNumber=customerservice.employNumber");
