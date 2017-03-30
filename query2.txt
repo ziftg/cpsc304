@@ -31,6 +31,28 @@
                             </form>
 
 
+ <p>Query15: MEMBER INFO UPDATE: PASSWORD</p>
+                            <p>userid oldpassword newpassword</p>
+                            <form method="POST" action="database_init2.php">  
+                              <p><input type="text" name="uid6">
+                                <input type="text" name="passwordold">
+                                <input type="text" name="passwordnew">
+                                <input type="submit" value="search" name="query15">
+</p>
+                              </form>
+
+<p>Query16: MEMBER INFO UPDATE: EMAIL</p>
+                              <p> USERID  NEWEMAIL</p>
+                              <form method="POST" action="database_init2.php">  
+                                <p><input type="text" name="userid3">
+                                  <input type="text" name="newemail">
+                                  <input type="submit" value="search" name="query16"></p>
+                                </form>
+                             
+
+
+
+
 function printresultidprice($result) { //prints results from a select statement
   echo "<table>";
   echo "<tr><th>TicketID</th><th>TicketPrice</th></tr>";
@@ -64,6 +86,30 @@ function printresultticket($result){
 echo "</table>";   
 
             }
+
+function printupdateinfo1($result) { //prints results from a select statement
+  echo "<table>";
+  echo "<tr><th>userid</th><th>newpassword</th></tr>";
+
+  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+  echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] ."</td></tr>" ; //or just use "echo $row[0]"
+}
+echo "</table>";
+
+}
+
+function printupdateinfo2($result) { //prints results from a select statement
+  echo "<table>";
+  echo "<tr><th>userid</th><th>newemail</th></tr>";
+
+  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+  echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] ."</td></tr>" ; //or just use "echo $row[0]"
+}
+echo "</table>";
+
+}
+
+
 
 
 
@@ -106,3 +152,25 @@ if(array_key_exists('query11', $_POST)){
                   where purchase.userid='$uid5'");
                 printpurchasehistory($result);
               }
+if(array_key_exists('query15', $_POST)){
+                $id9=$_POST['uid6'];
+                $passwordnew=$_POST['passwordnew'];
+                $passwordold=$_POST['passwordold'];
+                executePlainSQL("update member_serve set member_serve.password='$passwordnew' where member_serve.userid ='$id9' and member_serve.password='$passwordold'");
+                 OCICommit($db_conn);
+                $result=  executePlainSQL("select member_serve.userid, member_serve.password from member_serve where member_serve.userid ='$id9'");
+             printupdateinfo1($result);
+
+              }else
+              if(array_key_exists('query16', $_POST)){
+                $id10=$_POST['userid3'];
+                $email=$_POST['newemail'];
+                executePlainSQL("update member_serve set member_serve.emailAddress='$email' where member_serve.userid ='$id10'");
+                  OCICommit($db_conn);
+                $result=  executePlainSQL("select member_serve.userid, member_serve.emailAddress from member_serve where member_serve.userid ='$id10'");
+                  printupdateinfo2($result);
+
+              }
+
+
+
