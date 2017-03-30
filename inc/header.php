@@ -104,21 +104,21 @@
         <div class="control-group col-sm-2">
           <label class="control-label" for="inputPassword">Arrival Airport</label>
           <div class="controls">
-            <input type="password" name="aAirport" placeholder="Enter 3-letter Code">
+            <input type="text" name="aAirport" placeholder="Enter 3-letter Code">
           </div>
         </div>
 
         <div class="control-group col-sm-2">
           <label class="control-label" for="inputPassword">From Date</label>
           <div class="controls">
-            <input type="text" name="fromDate" placeholder="YYYY-MM-DD">
+            <input type="text" name="fromDate" placeholder="YYYY-MON-DD">
           </div>
         </div>
 
         <div class="control-group col-sm-2">
           <label class="control-label" for="inputPassword">To Date</label>
           <div class="controls">
-            <input type="text" name="toDate" placeholder="YYYY-MM-DD">
+            <input type="text" name="toDate" placeholder="YYYY-MON-DD">
           </div>
         </div>
 
@@ -130,7 +130,7 @@
 
 
 
-    <div class="control-group">
+    <div align="center">
       <div class="controls">
         <input type="submit" class="btn btn-primary" name="checkTicket" value="Check Availability"></input>
       </div>
@@ -211,14 +211,14 @@
       function printflightinfo($result) { //prints results from a select statement
         //echo "<br> CLIENTS INFO<br>";
         echo "<table class='table table-hover text-centered' style='color: black'>";
-        echo "<tr><th>Flight Number</th><th>Departure Date</th><th>Price</th><th>Arrival Airport</th>
-        <th>Departure Airport</th><th>ETD</th>
+        echo "<tr><th>Flight Number</th><th>Departure Date</th><th>Price</th><th>Departure Airport</th>
+        <th>Arrival Airport</th><th>ETD</th>
         <th>ETA</th><th>Action</th></tr>";
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
           echo "<tr><td>" . $row[0] ."</td><td>" . $row[1]."</td><td>".
           $row[3]."</td><td>".
-          $row[4]."</td><td>".
           $row[5]."</td><td>".
+          $row[4]."</td><td>".
           $row[6]."</td><td>".
           $row[7]."</td><td>".
           "<form method='POST' action='purchase_ticket.php'>
@@ -233,13 +233,40 @@
 
       if ($db_conn) {
         if(array_key_exists('checkTicket', $_POST)){
-            $flightno=$_POST['flightno'];
-            $ddate=$_POST['dDate']; 
-            $result=executePlainSQL("select * 
+            if (($_POST['flightno'] == NULL || $_POST['dDate'] == NULL) && 
+                ($_POST['dAirport'] == NULL || $_POST['aAirport'] == NULL || 
+                  $_POST['fromDate'] == NULL || $_POST['toDate'] == NULL)) {
+              echo "<script>alert('Oops! Not enough information for searching:(')</script>";
+            } else if ($_POST['flightno'] != NULL || $_POST['dDate'] != NULL) {
+              $flightno=$_POST['flightno'];
+              $ddate=$_POST['dDate']; 
+              $result=executePlainSQL("select * 
                                       from Flight_Use
                                       where Flight_Use.flightNumber='$flightno' and Flight_Use.departureDate='$ddate'");
-            executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-            printflightinfo($result);
+              executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+              printflightinfo($result);
+            }
+            else {
+              executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+              $dairport=$_POST['dAirport'];
+              $aairport=$_POST['aAirport'];
+              $date1=$_POST['fromDate']; 
+              $timestamp1= executePlainSQL("SELECT TO_TIMESTAMP('$date1','YYYY-MON-DD') FROM dual");
+
+              $date2=$_POST['toDate'];
+              $timestamp2=executePlainSQL("SELECT TO_TIMESTAMP('$date2','YYYY-MON-DD') FROM dual" );
+
+              $time1 = OCI_Fetch_Array($timestamp1, OCI_BOTH);
+              $time2 = OCI_Fetch_Array($timestamp2, OCI_BOTH);
+
+              $result=executePlainSQL("
+                      select * 
+                      from Flight_Use
+                      where Flight_Use.departureAirport='$dairport' and Flight_Use.arrivalAirport='$aairport' and 
+                        Flight_Use.ETD>= '$time1[0]' and Flight_Use.ETD<= '$time2[0]'");
+              printflightinfo($result);
+
+            }
 
         }
       }

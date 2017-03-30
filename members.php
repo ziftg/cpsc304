@@ -116,11 +116,11 @@
 
       function printclient($result) { //prints results from a select statement
         //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
-        echo "<table class='table table-hover text-centered'>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
         echo "<tr><th>Client Id</th><th>Client Name</th></th><th>Actions</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] ."</td><td>".$row[1]."</td><td>"."<form method='POST',action='database_init.php'>
+          echo "<tr><td>" . $row[0] ."</td><td>".$row[1]."</td><td>"."<form method='POST' action='client_info.php'>
               <p>
               <select name='InfoType'>
               <option value='' disabled selected>Select Information Type</option>
@@ -129,10 +129,9 @@
               <option value='max'>Most Expensice Ticket Purchased</option>
               <option value='sum'>Total Money Spent</option>
               <option value='count'>Total Number of Tickets Purchased</option>
-              <option value='Average'>Average Cost of Each Ticket</option>
+              <option value='average'>Average Cost of Each Ticket</option>
               </select>
-              <input type='hidden' name='userid2' size='6' value=$row[0]>
-               <input type='hidden' name='name2' size='6' value=$row[1]>
+              <input type='hidden' name='clientid' size='6' value=$row[0]>
                <input type='submit' value='Detail' class='btn btn-primary' name='memberDetail'>
                </p>
 
@@ -170,7 +169,7 @@
         //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
 
         if (array_key_exists('member', $_POST)) {
-          echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+          echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
       		echo "
           <div class='container vertical-center-row'>
@@ -186,7 +185,7 @@
 
       	} else
       		if (array_key_exists('staff', $_POST)) {
-            echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+            echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
             echo "<table class='table table-hover text-centered'>";
             $employid = $_POST['userID'];
             echo "
@@ -228,7 +227,7 @@
 
       		} else
       			if (array_key_exists('agent', $_POST)) {
-              echo "<h2 class='text-centered'>Welcome: ". $_POST['userID'] ."</h2>";
+              echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
               echo "<table class='table table-hover text-centered'>";
               $eno=$_POST['userID'];
               $result = executePlainSQL("
@@ -261,7 +260,7 @@
         }
 
         if(array_key_exists('previous', $_POST)){
-          echo "<h2 class='text-centered'>Previous Tasks for: ". $_POST['employID'] ."</h2>";
+          echo "<h3 class='text-centered'>Previous Tasks for: ". $_POST['employID'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -273,7 +272,7 @@
         }
 
         if (array_key_exists('future', $_POST)){
-          echo "<h2 class='text-centered'>Future Tasks for: ". $_POST['employID'] ."</h2>";
+          echo "<h3 class='text-centered'>Future Tasks for: ". $_POST['employID'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");

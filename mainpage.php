@@ -19,7 +19,7 @@
   <?php
   // include("inc/functions.php");
   // include("./oracle-test.php");
-  $pageTitle = "What the actual fuck";
+  $pageTitle = "Eagle Fly - Your travel companion";
   $section = null;
   include("inc/header.php");
   include("database_init.php");

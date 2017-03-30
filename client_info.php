@@ -84,78 +84,122 @@
 
       }
 
-
-      function printclientinfo($result) { //prints results from a select statement
-         // echo "<br>Got data from table onboardstaff:<br>";
-          echo "<table>";
-          echo "<tr><th>ID</th><th>Name</th><th>password</th></tr>";
-
-          while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-            echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] ."</td><td>". $row[2] ."</td><td>" . $row[3]."</td><td>" . $row[4]."</td><td>" . $row[5]."</td><td>" . $row[6]."</td></tr>" ; //or just use "echo $row[0]"
-          }
-          echo "</table>";
-
-        }
-
-      function printclient($result) { //prints results from a select statement
-        //echo "<br> onboardstaff check the aircraft is used on given date and flight no:<br>";
-        echo "<table class='table table-hover text-centered'>";
-        echo "<tr><th>Client Id</th><th>Client Name</th></th><th>Actions</th></tr>";
+      function printPurchaseHistory($result) { //prints results from a select statement
+        // echo "<br>Got data from table onboardstaff:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Ticket ID</th><th>Price</th><th>Flight Number</th><th>Departure Time</th><th>Arrival Time</th>
+              <th>Departure Airport</th><th>Arrival Airport</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] ."</td><td>".$row[1]."</td><td>"."<form method='POST',action='database_init.php'>
-              <p>
-              <select name='InfoType'>
-              <option value='' disabled selected>Select Information Type</option>
-              <option value='history'>All Purchase History</option>
-              <option value='min'>Cheapest Ticket Purchased</option>
-              <option value='max'>Most Expensice Ticket Purchased</option>
-              <option value='sum'>Total Money Spent</option>
-              <option value='count'>Total Number of Tickets Purchased</option>
-              <option value='Average'>Average Cost of Each Ticket</option>
-              </select>
-              <input type='hidden' name='userid2' size='6' value=$row[0]>
-               <input type='hidden' name='name2' size='6' value=$row[1]>
-               <input type='submit' value='Detail' name='query5'>
-               </p>
-
-               </form>"."</td></tr>"; 
+          echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . $row[5] . "</td><td>" . $row[6] ."</td></tr>" ; //or just use "echo $row[0]"
         }
-        echo "</table>"; 
+        echo "</table>";
 
       }
 
-      function printExample ($result) {
-        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] . "</td><td>" . $row[8] ."</td><tr>"; //or just use "echo $row[0]"
+      function printclientinfo3($result1,$result2,$choose) { //prints results from a select statement
+       // echo "<br>Got data from table onboardstaff:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>User ID</th><th>Name</th><th>Gender</th><th>Passport Number</th><th>Nationality</th>
+              <th>Email</th><th>Date of Birth</th><th>" . $choose . "</th></tr>";
+
+        while (($row1 = OCI_Fetch_Array($result1, OCI_BOTH))&&($row2 = OCI_Fetch_Array($result2, OCI_BOTH))) {
+          echo "<tr><td>" . $row1[0] . "</td><td>" . $row1[6] ."</td><td>". $row1[1] ."</td><td>" . $row1[3]."</td><td>" . $row1[4]."</td><td>" . $row1[2]."</td><td>" . $row1[5]."</td><td>". $row2[0].
+          "</td></tr>"; //or just use "echo $row[0]"
         }
+        echo "</table>";
+
       }
+
 
       // // Connect Oracle...
       if ($db_conn) {
-        if(isset($_POST)){
-            echo "Here";
+        if (array_key_exists('memberDetail', $_POST)) {
+
+            //echo "<h2 class='text-centered'>Previous Tasks for: ". $_POST['employID'] ."</h2>";
+            //echo "<table class='table table-hover text-centered'>";
+          $userid=$_POST['clientid'];
+
+          if ($_POST['InfoType'] == 'history') {
+            executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
+            $result=executePlainSQL("select ticket_has.ticketID as tid, ticket_has.ticketPrice as price,
+                                      ticket_has.flightNumber as fno, Flight_Use.ETD as etd, Flight_Use.ETA as eta,
+                                      Flight_Use.departureAirport as dapt, Flight_Use.arrivalAirport as aapt
+                                      from member_serve, Flight_Use, ticket_has
+                                      where member_serve.userid='$userid' and 
+                                            member_serve.passportNum=ticket_has.passportNumber and
+                                            ticket_has.flightNumber=Flight_Use.flightNumber and 
+                                            ticket_has.dateorg=Flight_Use.departureDate");
+            echo "<h3 class='text-centered'>Purchase History for: ". $_POST['clientid'] ."</h3>";
+            echo "<table class='table table-hover text-centered'>";
+            printPurchaseHistory($result);
+          }
+          else {
+         
+            $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
+              as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+              member_serve.dob as dob, member_serve.name as name
+              from member_serve
+              where member_serve.userid='$userid'");
+
+               // printclientinfo($result);
+            $result1=executePlainSQL("
+                   select COUNT(ticket_has.ticketID) as numtickets
+                   from member_serve,ticket_has
+                   where member_serve.userid='$userid' and 
+                   member_serve.passportNum=ticket_has.passportNumber");  
+
+            $result2=executePlainSQL("
+                   select AVG(ticket_has.ticketPrice) as avgs
+                   from member_serve,ticket_has
+                   where member_serve.userid='$userid' and 
+                   member_serve.passportNum=ticket_has.passportNumber");  
+
+            $result3=executePlainSQL("
+                   select MIN(ticket_has.ticketPrice) as mins
+                   from member_serve,ticket_has
+                   where member_serve.userid='$userid' and 
+                   member_serve.passportNum=ticket_has.passportNumber");  
+
+            $result4=executePlainSQL("
+                   select  MAX(ticket_has.ticketPrice) as maxs
+                   from member_serve,ticket_has
+                   where member_serve.userid='$userid' and 
+                   member_serve.passportNum=ticket_has.passportNumber");  
+
+            $result5=executePlainSQL("
+                   select SUM(ticket_has.ticketPrice) as sums
+                   from member_serve,ticket_has
+                   where member_serve.userid='$userid' and 
+                   member_serve.passportNum=ticket_has.passportNumber"); 
+
+            echo "<h3 class='text-centered'>Profile of ". $_POST['clientid'] ."</h3>";
+            echo "<table class='table table-hover text-centered'>";
+            $choose = $_POST['InfoType'];
+            switch ($choose) {
+                  case 'count':
+                      printclientinfo3($result,$result1,$choose);
+                      break;
+                  case 'average':
+                      printclientinfo3($result,$result2,$choose);
+                      break;
+                  case 'min':
+                       printclientinfo3($result,$result3,$choose);
+                      break;
+                  case 'max':
+                      printclientinfo3($result,$result4,$choose);
+                      break;
+                  case 'sum':
+                      printclientinfo3($result,$result5,$choose);
+                      break;
+                  
+            }
+          }
         }
-    }
-      ?>
-
-
-
-
-
-
+      }
+  ?>
 
     </div>
-
-
-
-
-
-
-
-
-
-
 
   </body>
 
