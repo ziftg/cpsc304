@@ -171,9 +171,11 @@
         if (array_key_exists('member', $_POST)) {
           echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
           echo "<table class='table table-hover text-centered'>";
+          $userid = $_POST['userID'];
       		echo "
           <div class='container vertical-center-row'>
-              <form>
+              <form method='POST' action='members.php'>
+                    <input type='hidden' name='userid' value=$userid>
                     <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
 
                     <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='agent'></div>
@@ -241,6 +243,19 @@
         echo "</table>";
       }
 
+      function printPurchaseHistory($result) { //prints results from a select statement
+        // echo "<br>Got data from table onboardstaff:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Ticket ID</th><th>Price</th><th>Flight Number</th><th>Departure Time</th><th>Arrival Time</th>
+              <th>Departure Airport</th><th>Arrival Airport</th></tr>";
+
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . $row[5] . "</td><td>" . $row[6] ."</td></tr>" ; //or just use "echo $row[0]"
+        }
+        echo "</table>";
+
+      }
+
       // // Connect Oracle...
       if ($db_conn) {
         executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -299,27 +314,25 @@
 
         }
 
+        if (array_key_exists('history', $_POST)){
+          echo "<h3 class='text-centered'>Purchase History for: ". $_POST['userid'] ."</h3>";
+          echo "<table class='table table-hover text-centered'>";
+          $userid=$_POST['userid'];
+          $result=executePlainSQL("select ticket_has.ticketID as tid, ticket_has.ticketPrice as price,
+                                      ticket_has.flightNumber as fno, Flight_Use.ETD as etd, Flight_Use.ETA as eta,
+                                      Flight_Use.departureAirport as dapt, Flight_Use.arrivalAirport as aapt
+                                      from member_serve, Flight_Use, ticket_has
+                                      where member_serve.userid='$userid' and 
+                                            member_serve.passportNum=ticket_has.passportNumber and
+                                            ticket_has.flightNumber=Flight_Use.flightNumber and 
+                                            ticket_has.dateorg=Flight_Use.departureDate");
+            printPurchaseHistory($result);
+        }
+
 
       }
       ?>
-
-
-
-
-
-
-
     </div>
-
-
-
-
-
-
-
-
-
-
 
   </body>
 

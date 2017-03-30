@@ -148,7 +148,7 @@
             //printresultidprice($result); 
             $row = OCI_Fetch_Array($result, OCI_BOTH);
             echo "<script> alert('Congratulation! Your purchase is successful! \\nTicket ID: " . $row[0] . "\\nPrice: CAD" .
-                  $row[1]. "Thank you!')</script>";
+                  $row[1]. "\\nThank you!')</script>";
         }
 
     }
