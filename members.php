@@ -29,7 +29,11 @@
       <!-- <h2>Eagle Fly</h2>
       <h3>Your travel compaion</h3> -->
       <?php
-
+      echo "<div class='container vertical-center-row'>
+          <form method='POST' action='mainpage.php'>
+                <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='back' name='profile'></div>
+          </form>
+      </div>";
       //this tells the system that it's no longer just parsing
       //html; it's now parsing PHP
       $db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost.ugrad.cs.ubc.ca)(PORT = 1522)))(CONNECT_DATA=(SID=ug)))";
@@ -179,7 +183,7 @@ select case when count(*) > 0 then 1 else 0 end
           $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
           // echo $value;
           if(!$value) {
-            echo "<script>alert('Oops! Not enough information for searching:(')</script>";
+            echo "<script>alert('Oops! We cannot find you:(')</script>";
           }
           else {
             echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
@@ -216,7 +220,7 @@ select case when count(*) > 0 then 1 else 0 end
 
 
                      if(!$value){
-                       echo"wrong!";
+                       echo"<script>alert('Oops! We cannot find you:(')</script>";
                      }
             else
             {
@@ -275,7 +279,7 @@ select case when count(*) > 0 then 1 else 0 end
               $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
 
               if(!$value)
-              {echo"wrong!";}
+              {echo"<script>alert('Oops! We cannot find you:(')</script>";}
               else
               {
                 echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
@@ -391,48 +395,6 @@ select case when count(*) > 0 then 1 else 0 end
                                             ticket_has.flightNumber=Flight_Use.flightNumber and
                                             ticket_has.dateorg=Flight_Use.departureDate");
             printPurchaseHistory($result);
-        }
-
-        if (array_key_exists('profile', $_POST)){
-          $userid = $_POST['userid'];
-          echo "<h3 class='text-centered'>Change your Profile: ". $_POST['userid'] ."</h3>";
-          echo "<div align='center'>
-                  <form action='members.php' method='POST'>
-                    <input type='hidden' name='userid' value=$userid>
-                    <p>Old Password: 
-                      <input type='password' name='oldpassword'>
-                    </p>
-                    <p>New Password: 
-                      <input type='password' name='newpassword1'>
-                    </p>
-                    <p>New Password Confirm: 
-                      <input type='password' name='newpassword2'>
-                    </p>
-                    <p>
-                      <input type='submit' name='changepwd' class='btn btn-primary' value='Change Password'>
-                    </p>
-                  </form>
-                </div>";
-
-        }
-
-        if (array_key_exists('changepwd', $_POST)){
-          $userid=$_POST['userid'];
-          $passwordold=$_POST['oldpassword'];
-          $temp=executePlainSQL("select password from member_serve where userid='$userid'");
-          $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
-          $checkpwd = $temp2[0];
-          if ($checkpwd != $passwordold) {
-            echo "<script>alert('You entered a wrong password.')</script>";
-          } else if ($_POST['newpassword1'] != $_POST['newpassword2']) {
-            echo "<script>alert('Your new passwords do not match.')</script>";
-          } else {
-            $passwordnew=$_POST['newpassword1'];
-            executePlainSQL("update member_serve set member_serve.password='$passwordnew' where member_serve.userid ='$userid' and member_serve.password='$passwordold'");
-            OCICommit($db_conn);
-            $result=  executePlainSQL("select member_serve.userid, member_serve.password from member_serve where member_serve.userid ='$id9'");
-            echo "<script>alert('You have successfully changed your password.')</script>";
-          }
         }
 
         if(array_key_exists('myAgent', $_POST)){
