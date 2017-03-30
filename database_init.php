@@ -172,6 +172,7 @@ if ($db_conn) {
                           name varchar2(100) not null,
                           password varchar2(30) not null,
                           role varchar2(30) not null,
+			  check (role in ('cabincrew', 'engineer', 'pilot')),
                           primary key(employNumber)
                           )");
       executePlainSQL("create table purchase(
@@ -192,7 +193,7 @@ if ($db_conn) {
   													ATA timestamp,
   													numOfPassengers int,
   													primary key (flightNumber, departureDate),
-  													foreign key (aircraftSerialNo) references AirCraft
+  													foreign key (aircraftSerialNo) references AirCraft 
                             )");
       
       executePlainSQL("create table workin(
@@ -1279,6 +1280,7 @@ executePlainSQL("insert into ticket_has values('7464334843923','220','SQ0746564'
 executePlainSQL("insert into ticket_has values('5432635643923','220','SQ2354233','EF1002','2017-04-22')");
 executePlainSQL("insert into ticket_has values('5432588433453','220','SQ4562342','EF1002','2017-04-22')");
 executePlainSQL("insert into ticket_has values('5425435643543','220','SQ2314892','EF1002','2017-04-22')");
+	    
 
       //OCICommit($db_conn);
 
