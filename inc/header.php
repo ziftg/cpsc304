@@ -143,16 +143,16 @@
   <form class="form" action="mainpage.php" method="POST">
 
     <div align="center" id="ticketId">
-      <label class="control-label" for="inputPassword">Manage My ID</label>
+      <label class="control-label" for="inputPassword">Manage My Ticket</label>
       <div class="controls">
-        <input type="text" name="tpnm1" placeholder="Enter your ticket ID">
+        <input type="text" name="tpnm1" placeholder="Enter your ticket ID" >
       </div>
     </div>
 
 
     <div align="center">
       <div class="controls">
-        <input type="submit" class="btn btn-primary" name="manageMyTicket" value="Manage My Ticket"></input>
+        <input type="submit" class="btn btn-primary" name="manageMyTicket" value="Manage My Ticket" style="margin-top: 15"></input>
       </div>
     </div>
   </form>

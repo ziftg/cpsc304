@@ -228,14 +228,27 @@ select case when count(*) > 0 then 1 else 0 end
                 <form align='center' method='POST' action='members.php'>
                   <div class='row'>
                     <div class='control-group col-sm-4'>
+                      <input type='hidden' value=$employid name='employID'>
                       <div class='controls'>
-                        <input type='hidden' value=$employid name='employID'>
                         <input type='submit' class='btn btn-primary' value='Check Previous Tasks' name='previous'>
                       </div>
 
                       <div class='controls' style='margin-top: 30'>
-                        <input type='hidden' value=$employid name='employID'>
                         <input type='submit' class='btn btn-primary' value='Check Future Tasks' name='future'>
+                      </div>
+
+                      <div class='controls' style='margin-top: 30'>
+                        <label class='control-label'>Aircraft Statistics</label>
+                        <select name='statsType'>
+                          <option value='' disabled selected>Select Statistics Type</option>
+                          <option value='avg'>Average Attendance Rate</option>
+                          <option value='max'>Maximum Attendance Rate</option>
+                          <option value='min'>Minimum Attendance Rate</option>
+                        </select>
+                      </div>
+
+                      <div class='controls' style='margin-top: 30'>
+                        <input type='submit' class='btn btn-primary' value='Check Flights Statistics' name='stats'>
                       </div>
                     </div>
                   </div>
@@ -374,6 +387,47 @@ select case when count(*) > 0 then 1 else 0 end
              where workin.employNumber=$number1 and
             workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
           printResultwinew($result);
+        }
+
+        if (array_key_exists('stats', $_POST)){
+          $result1= executePlainSQL("
+               select round(AVG(avgs)*100,4)
+               from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+       
+          $result2= executePlainSQL("
+                select round(MAX(avgs)*100,4)
+                from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+
+          $result3= executePlainSQL("
+               select round(MIN(avgs)*100,4)
+              from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+                
+          if(isset($_POST['statsType'])){
+            $decide = $_POST['statsType'];
+            switch ($decide) {
+                case 'avg':
+                   echo 'Average Attendance Rate: ',OCI_Fetch_Array($result1,OCI_BOTH)[0],'%';
+                    break;
+                case 'max':
+                    echo 'Maximum Attendance Rate: ',OCI_Fetch_Array($result2,OCI_BOTH)[0],'%';
+                    break;
+                case 'min':
+                      echo 'Minimum Attendance Rate: ',OCI_Fetch_Array($result3,OCI_BOTH)[0],'%';
+                    break;
+            }
+        }   
         }
 
         if (array_key_exists('aircraft', $_POST)){
