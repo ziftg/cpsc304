@@ -135,9 +135,9 @@
                <input type='submit' value='Detail' class='btn btn-primary' name='memberDetail'>
                </p>
 
-               </form>"."</td></tr>"; 
+               </form>"."</td></tr>";
         }
-        echo "</table>"; 
+        echo "</table>";
 
       }
 
@@ -147,7 +147,7 @@
         echo "<tr><th>Employee Number</th><th>name</th><th>flightnumber</th><th>date</th><th>Role</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row["EMPLOYNUMBER"] . "</td><td>" . $row["NAME"] ."</td><td>". $row["FLIGHTNUMBER"] ."</td><td>". $row["DATE1"]. "</td><td>" . $row["ROLE"] . "</td></tr>"; //or just use "echo $row[0]" 
+          echo "<tr><td>" . $row["EMPLOYNUMBER"] . "</td><td>" . $row["NAME"] ."</td><td>". $row["FLIGHTNUMBER"] ."</td><td>". $row["DATE1"]. "</td><td>" . $row["ROLE"] . "</td></tr>"; //or just use "echo $row[0]"
         }
         echo "</table>";
       }
@@ -159,13 +159,13 @@
               <th>Actual Number of Passengers</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-          echo "<tr><td>" . $row[0] ."</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[1] . "</td><td>"; 
+          echo "<tr><td>" . $row[0] ."</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[1] . "</td><td>";
         }
-        echo "</table>";    
+        echo "</table>";
       }
 
       function printMain() { //prints results from a select statement
-        
+
         //echo "<tr><th>UserID</th><th>TicketID</th></tr>";
 
         if (array_key_exists('member', $_POST)) {
@@ -178,7 +178,7 @@
                     <input type='hidden' name='userid' value=$userid>
                     <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
 
-                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='agent'></div>
+                    <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
 
                     <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
 
@@ -218,7 +218,7 @@
                     <div class='controls'>
                       <input type='text' name='date' placeholder='YYYY-MM-DD'>
                     </div>
-                    
+
                     <div class='controls' style='margin-top: 15'>
                       <input type='submit' class='btn btn-primary' value='Check Aircraft' name='aircraft'>
                     </div>
@@ -233,7 +233,7 @@
               echo "<table class='table table-hover text-centered'>";
               $eno=$_POST['userID'];
               $result = executePlainSQL("
-                  select member_serve.userid as userid, member_serve.name as name 
+                  select member_serve.userid as userid, member_serve.name as name
                   from member_serve
                   where member_serve.employNumber=$eno");
               printclient($result);
@@ -256,6 +256,18 @@
 
       }
 
+      function printAgent($result) { //prints results from a select statement
+        // echo "<br>Got data from table onboardstaff:<br>";
+        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<tr><th>Customer Service Agent</th></tr>";
+
+        while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+          echo "<tr><td>" . $row[0] . "</td></tr>" ; //or just use "echo $row[0]"
+        }
+        echo "</table>";
+
+      }
+
       // // Connect Oracle...
       if ($db_conn) {
         executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -265,9 +277,9 @@
         if(array_key_exists('memberDetail', $_POST)){
             $userid=$_POST['userid2'];
             $name=$_POST['name2'];
-                   
+
                 $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
-                      as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+                      as email,member_serve.passportNum as passport, member_serve.nationality as nationality,
                       member_serve.dob as dob, member_serve.name as name
                       from member_serve,
                       where member_serve.userid=$userid");
@@ -281,7 +293,7 @@
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
           $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
              from workin,onboardstaff,Flight_Use
-             where workin.employNumber=$number1 and 
+             where workin.employNumber=$number1 and
             workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD<='01-APR-2017 00:00:00'");
           printResultwinew($result);
         }
@@ -294,17 +306,17 @@
           $result = executePlainSQL("
            select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1, onboardstaff.role as role
              from workin,onboardstaff,Flight_Use
-             where workin.employNumber=$number1 and 
+             where workin.employNumber=$number1 and
             workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
           printResultwinew($result);
         }
 
         if (array_key_exists('aircraft', $_POST)){
           $fno=$_POST['flightno'];
-          $date=$_POST['date']; 
+          $date=$_POST['date'];
           echo "<h3 class='text-centered'>Aircraft Information for: ". $fno ."</h3>";
           echo "<table class='table table-hover text-centered'>";
-           
+
           $result = executePlainSQL("
                   select Flight_Use.aircraftSerialNo as sno, Flight_Use.numOfPassengers as nop,
                           AirCraft.type as type, AirCraft.capacity as cap
@@ -322,13 +334,23 @@
                                       ticket_has.flightNumber as fno, Flight_Use.ETD as etd, Flight_Use.ETA as eta,
                                       Flight_Use.departureAirport as dapt, Flight_Use.arrivalAirport as aapt
                                       from member_serve, Flight_Use, ticket_has
-                                      where member_serve.userid='$userid' and 
+                                      where member_serve.userid='$userid' and
                                             member_serve.passportNum=ticket_has.passportNumber and
-                                            ticket_has.flightNumber=Flight_Use.flightNumber and 
+                                            ticket_has.flightNumber=Flight_Use.flightNumber and
                                             ticket_has.dateorg=Flight_Use.departureDate");
             printPurchaseHistory($result);
         }
 
+        if(array_key_exists('myAgent', $_POST)){
+          echo "<h3 class='text-centered'>Agent for: ". $_POST['userid'] ."</h3>";
+          echo "<table class='table table-hover text-centered'>";
+          $userid=$_POST['userid'];
+          $result=executePlainSQL("select customerservice.name
+                                      from member_serve, customerservice
+                                      where member_serve.userid='$userid' and
+                                            member_serve.employNumber=customerservice.employNumber");
+          printAgent($result);
+        }
 
       }
       ?>
