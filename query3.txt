@@ -1,0 +1,54 @@
+
+                              <p>Query17: GROUPBY REPORT AIRCRAFT PURCHASE RATE</p>
+           
+                              <form method="POST" action="database_init2.php">  
+                              <p><select name='decide'>
+                              <option value='avg1'>AVG PURCHASE RATE</option>
+                              <option value='max1'>MAX PURCHASE RATE</option>
+                              <option value='min1'>MIN PURCHASE RATE</option>
+                              <input type="submit" value="search" name="query17"></p>
+                              </form>
+
+
+
+
+ if(array_key_exists('query17', $_POST)){
+               $result1= executePlainSQL("
+               select round(AVG(avgs)*100,4)
+               from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+       
+           $result2= executePlainSQL("
+                select round(MAX(avgs)*100,4)
+                from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+
+           $result3= executePlainSQL("
+               select round(MIN(avgs)*100,4)
+              from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+                ");
+                
+   if(isset($_POST['decide'])){
+    $decide = $_POST['decide'];
+    switch ($decide) {
+        case 'avg1':
+           echo 'AVG PURCHASE RATE: ',OCI_Fetch_Array($result1,OCI_BOTH)[0],'%';
+            break;
+        case 'max1':
+            echo 'MAX PURCHASE RATE: ',OCI_Fetch_Array($result2,OCI_BOTH)[0],'%';
+            break;
+        case 'min1':
+              echo 'MIN PURCHASE RATE: ',OCI_Fetch_Array($result3,OCI_BOTH)[0],'%';
+            break;
+    }
+}   
+              }  
