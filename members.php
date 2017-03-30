@@ -256,6 +256,7 @@
 
       }
 
+
       // // Connect Oracle...
       if ($db_conn) {
         executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
@@ -327,6 +328,48 @@
                                             ticket_has.flightNumber=Flight_Use.flightNumber and 
                                             ticket_has.dateorg=Flight_Use.departureDate");
             printPurchaseHistory($result);
+        }
+
+        if (array_key_exists('profile', $_POST)){
+          $userid = $_POST['userid'];
+          echo "<h3 class='text-centered'>Change your Profile: ". $_POST['userid'] ."</h3>";
+          echo "<div align='center'>
+                  <form action='members.php' method='POST'>
+                    <input type='hidden' name='userid' value=$userid>
+                    <p>Old Password: 
+                      <input type='password' name='oldpassword'>
+                    </p>
+                    <p>New Password: 
+                      <input type='password' name='newpassword1'>
+                    </p>
+                    <p>New Password Confirm: 
+                      <input type='password' name='newpassword2'>
+                    </p>
+                    <p>
+                      <input type='submit' name='changepwd' class='btn btn-primary' value='Change Password'>
+                    </p>
+                  </form>
+                </div>";
+
+        }
+
+        if (array_key_exists('changepwd', $_POST)){
+          $userid=$_POST['userid'];
+          $passwordold=$_POST['oldpassword'];
+          $temp=executePlainSQL("select password from member_serve where userid='$userid'");
+          $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
+          $checkpwd = $temp2[0];
+          if ($checkpwd != $passwordold) {
+            echo "<script>alert('You entered a wrong password.')</script>";
+          } else if ($_POST['newpassword1'] != $_POST['newpassword2']) {
+            echo "<script>alert('Your new passwords do not match.')</script>";
+          } else {
+            $passwordnew=$_POST['newpassword1'];
+            executePlainSQL("update member_serve set member_serve.password='$passwordnew' where member_serve.userid ='$userid' and member_serve.password='$passwordold'");
+            OCICommit($db_conn);
+            $result=  executePlainSQL("select member_serve.userid, member_serve.password from member_serve where member_serve.userid ='$id9'");
+            echo "<script>alert('You have successfully changed your password.')</script>";
+          }
         }
 
 

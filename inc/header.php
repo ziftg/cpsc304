@@ -254,11 +254,17 @@
       function printresultticket($result){
         if($result){
           echo "<table class='table table-hover text-centered' style='color: black'>";
-          echo "<tr><th>Ticket ID</th><th>Ticket Price</th><th>Passport Number</th><th>Flight Number</th><th>Date</th></tr>";
+          echo "<tr><th>Ticket ID</th><th>Ticket Price</th><th>Passport Number</th><th>Flight Number</th><th>Date</th>
+                <th>Cancel Flight</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
            echo "<tr align='center'><td>".$row[0]."</td><td>".$row[1]."</td><td>".$row[2]."</td><td>".$row[3].
-            "</td><td>".$row[4]."</td></tr>" ;
+            "</td><td>".$row[4]."</td><td>" . 
+            "<form method='POST' action='mainpage.php'>
+              <p> <input type='hidden' name='ticketid' size='6' value=$row[0]>
+                  <input type='submit' name='cancel' class='btn btn-primary' value='Cancel'>
+              </p>
+            </form>" ."</td></tr>" ;
        }
        echo "</table>";
      } else {
@@ -316,6 +322,11 @@
           $tid3=$_POST['tpnm1'];
           $result = executePlainSQL("select * from ticket_has where ticket_has.ticketID='$tid3'");
             printresultticket($result);
+        }
+        if(array_key_exists('cancel', $_POST)){
+          $tid=$_POST['ticketid'];
+          executePlainSQL("delete from ticket_has where exists (select * from ticket_has where ticket_has.ticketID='$tid')");
+          OCICommit($db_conn);
         }
       }
   ?>
