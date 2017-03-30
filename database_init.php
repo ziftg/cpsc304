@@ -226,6 +226,7 @@ if ($db_conn) {
                           dob       varchar2(10),
                           name      varchar2(100),
                           employNumber  int,
+			  CONSTRAINT mailcheck CHECK (REGEXP_LIKE (emailAddress, '^(\S+)\@(\S+)\.(\S+)$')),
                           primary key   (userid),
                           foreign key (employNumber) references customerservice ON DELETE CASCADE
                           )");
