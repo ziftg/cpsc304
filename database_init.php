@@ -172,6 +172,7 @@ if ($db_conn) {
                           name varchar2(100) not null,
                           password varchar2(30) not null,
                           role varchar2(30) not null,
+			  check (role in ('cabincrew', 'engineer', 'pilot')),
                           primary key(employNumber)
                           )");
       executePlainSQL("create table purchase(
@@ -192,7 +193,7 @@ if ($db_conn) {
   													ATA timestamp,
   													numOfPassengers int,
   													primary key (flightNumber, departureDate),
-  													foreign key (aircraftSerialNo) references AirCraft
+  													foreign key (aircraftSerialNo) references AirCraft 
                             )");
       
       executePlainSQL("create table workin(
