@@ -122,9 +122,9 @@
           </div>
         </div>
 
-        <div class="control-group col-sm-2">
-          <label for="sel1">Order By:</label>
-            <select class="form-control" id="sel1">
+        <div class="control-group col-sm-2" >
+          <label class="control-label" id="sel1">Order By:</label>
+            <select name="order_by" class="form-control">
               <option value="">date</option>
               <option value="order by ticketPrice">price low to high</option>
               <option value="order by ticketPrice DESC">price high to low</option>
@@ -134,10 +134,6 @@
 
       </div>
     </div>
-
-
-
-
 
     <div align="center">
       <div class="controls">
@@ -268,11 +264,13 @@
               $time1 = OCI_Fetch_Array($timestamp1, OCI_BOTH);
               $time2 = OCI_Fetch_Array($timestamp2, OCI_BOTH);
 
+              $order_by=$_POST['order_by'];
+
               $result=executePlainSQL("
                       select *
                       from Flight_Use
                       where Flight_Use.departureAirport='$dairport' and Flight_Use.arrivalAirport='$aairport' and
-                        Flight_Use.ETD>= '$time1[0]' and Flight_Use.ETD<= '$time2[0]'");
+                        Flight_Use.ETD>= '$time1[0]' and Flight_Use.ETD<= '$time2[0]' $order_by");
               printflightinfo($result);
 
             }
