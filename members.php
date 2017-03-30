@@ -203,56 +203,78 @@ select case when count(*) > 0 then 1 else 0 end
 
       	} else
       		if (array_key_exists('staff', $_POST)) {
-            echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
-            echo "<table class='table table-hover text-centered'>";
-            $employid = $_POST['userID'];
-            echo "
-            <div style='margin-left: 400' align='center'>
-              <form align='center' method='POST' action='members.php'>
-                <div class='row'>
-                  <div class='control-group col-sm-4'>
-                    <div class='controls'>
-                      <input type='hidden' value=$employid name='employID'>
-                      <input type='submit' class='btn btn-primary' value='Check Previous Tasks' name='previous'>
-                    </div>
 
-                    <div class='controls' style='margin-top: 30'>
-                      <input type='hidden' value=$employid name='employID'>
-                      <input type='submit' class='btn btn-primary' value='Check Future Tasks' name='future'>
+            $eid=$_POST['userID'];
+            $password=$_POST['password'];
+
+            $result = executePlainSQL("
+            select case when count(*) > 0 then 1 else 0 end
+            from onboardstaff
+            where employNumber='$eid' and password='$password'");
+  // $result = executePlainSQL("select * from member_serve");
+            $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
+
+
+                     if(!$value){
+                       echo"wrong!";
+                     }
+            else
+            {
+              echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
+              echo "<table class='table table-hover text-centered'>";
+              $employid = $_POST['userID'];
+              echo "
+              <div style='margin-left: 400' align='center'>
+                <form align='center' method='POST' action='members.php'>
+                  <div class='row'>
+                    <div class='control-group col-sm-4'>
+                      <div class='controls'>
+                        <input type='hidden' value=$employid name='employID'>
+                        <input type='submit' class='btn btn-primary' value='Check Previous Tasks' name='previous'>
+                      </div>
+
+                      <div class='controls' style='margin-top: 30'>
+                        <input type='hidden' value=$employid name='employID'>
+                        <input type='submit' class='btn btn-primary' value='Check Future Tasks' name='future'>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class='row' style='margin-top: 30' align='center'>
-                  <div class='control-group col-sm-4'>
-                    <label class='control-label' for='inputEmail'>Flight Number</label>
-                    <div class='controls'>
-                      <input type='text' name='flightno' placeholder='Enter a flight number'>
-                    </div>
+                  <div class='row' style='margin-top: 30' align='center'>
+                    <div class='control-group col-sm-4'>
+                      <label class='control-label' for='inputEmail'>Flight Number</label>
+                      <div class='controls'>
+                        <input type='text' name='flightno' placeholder='Enter a flight number'>
+                      </div>
 
-                    <label class='control-label' for='inputEmail' style='margin-top: 15'>Departure Date</label>
-                    <div class='controls'>
-                      <input type='text' name='date' placeholder='YYYY-MM-DD'>
-                    </div>
+                      <label class='control-label' for='inputEmail' style='margin-top: 15'>Departure Date</label>
+                      <div class='controls'>
+                        <input type='text' name='date' placeholder='YYYY-MM-DD'>
+                      </div>
 
-                    <div class='controls' style='margin-top: 15'>
-                      <input type='submit' class='btn btn-primary' value='Check Aircraft' name='aircraft'>
+                      <div class='controls' style='margin-top: 15'>
+                        <input type='submit' class='btn btn-primary' value='Check Aircraft' name='aircraft'>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </form>
-            </div>";
+                </form>
+              </div>";
+            }
 
       		} else
       			if (array_key_exists('agent', $_POST)) {
 
               $eid=$_POST['userID'];
               $password=$_POST['password'];
-              if(
-              executePlainSQL("
+
+              $result = executePlainSQL("
               select case when count(*) > 0 then 1 else 0 end
               from customerservice
-              where employNumber='$eid' and password='$password'")==0)
+              where employNumber='$eid' and password='$password'");
+    // $result = executePlainSQL("select * from member_serve");
+              $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
+
+              if(!$value)
               {echo"wrong!";}
               else
               {
