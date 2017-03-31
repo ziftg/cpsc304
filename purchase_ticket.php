@@ -160,13 +160,15 @@
                 executePlainSQL("insert into ticket_has values ('$ticketid','$price','$passportnumber','$flightno','$date')");
                 executePlainSQL("insert into purchase values ('$userid','$ticketid')");
                 OCICommit($db_conn);
-                echo "<script>alert('Success!')</script>";
+                echo "<script>alert('You have successfully purchased a ticket! \\nTicket ID: " . $ticketid .
+                      "\\nPrice: CAD" . $price . "\\nThank you!')</script>";
               }
             break;
             case 'no':
               executePlainSQL("insert into ticket_has values ('$ticketid','$price','$passportnumber','$flightno','$date')");
               OCICommit($db_conn);
-              echo "<script>alert('Success!')</script>";
+              echo "<script>alert('You have successfully purchased a ticket! \\nTicket ID: " . $ticketid .
+                      "\\nPrice: CAD" . $price . "\\nThank you!')</script>";
             break;
           }
 
