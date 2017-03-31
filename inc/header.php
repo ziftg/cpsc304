@@ -9,56 +9,54 @@
 <body>
 
 	<div class="header">
+    <div class="wrapper">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-2" style="margin-right:120"><h1 class="branding-title"><a href="/">Personal Media Library</a></h1></div>
+                <div class="col-lg-6">
+                  <form method="POST" action="members.php">
 
-		<div class="wrapper">
+                  <div class="control-group col-sm-6">
+                    <div class="controls">
+                      <input type="text" name="userID" id="inputEmail" placeholder="user name">
+                    </div>
+                  </div>
 
-			<h1 class="branding-title"><a href="/">Personal Media Library</a></h1>
-        <div class="container">
-          <div class="row">
+                  <div class="control-group col-sm-6">
+                    <div class="controls">
+                      <input type="password" name="password" id="inputPassword" placeholder="password">
+                    </div>
+                  </div>
 
-            <form method="POST" action="members.php">
+                  <div class="control-group col-lg-4">
+                    <div class="controls">
+                      <input type="submit" class="btn btn-primary" value="login as member" name="member">
+                    </div>
+                  </div>
+                  <div class="control-group col-lg-3">
+                    <div class="controls">
+                      <input type="submit" class="btn btn-primary" value="login as staff" name="staff">
+                    </div>
+                  </div>
 
-            <div class="control-group col-sm-2">
-              <div class="controls">
-                <input type="text" name="userID" id="inputEmail" placeholder="user name">
+                  <div class="control-group col-lg-3">
+                    <div class="controls">
+                      <input type="submit" class="btn btn-primary" value="login as agent" name="agent">
+                    </div>
+
+                  </div>
+            </form>
+                </div>
+              <div class="col-lg-1">
+                <form method="POST" action="member_application.php">
+                  <div class="controls">
+                    <button type="submit" class="btn btn-primary btn-minor-outline">Apply Membership !</button>
+                  </div>
+                </form>
               </div>
             </div>
-
-            <div class="control-group col-sm-2">
-              <div class="controls">
-                <input type="password" name="password" id="inputPassword" placeholder="password">
-              </div>
-            </div>
-
-            <div class="control-group col-sm-2">
-              <div class="controls">
-                <input type="submit" class="btn btn-primary" value="login as member" name="member">
-              </div>
-              <div class="controls">
-                <input type="submit" class="btn btn-primary" value="login as staff" name="staff">
-              </div>
-            </div>
-
-            <div class="control-group col-sm-2">
-              <div class="controls">
-                <input type="submit" class="btn btn-primary" value="login as agent" name="agent">
-              </div>
-
-            </div>
-      </form>
-
-      <form method="POST" action="member_application.php">
-        <div class="controls">
-          <button type="submit" class="btn btn-primary">Apply Membership</button>
-        </div>
-      </form>
-
-        </div>
-
-
-      </div>
-		</div>
-
+          </div>
+    		</div>
 	</div>
   <div class="wrapper">
     <h2>Eagle Fly</h2>
@@ -135,7 +133,7 @@
 
     <div align="center">
       <div class="controls">
-        <input type="submit" class="btn btn-primary" name="checkTicket" value="Check Availability"></input>
+        <input type="submit" class="btn btn-primary btn-primary-big" name="checkTicket" value="Check Availability"></input>
       </div>
     </div>
   </form>
@@ -143,7 +141,7 @@
   <form class="form" action="mainpage.php" method="POST">
 
     <div align="center" id="ticketId">
-      <label class="control-label" for="inputPassword">Manage My Ticket</label>
+      <label class="control-label" for="inputPassword" style="margin: 30">Manage My Ticket</label>
       <div class="controls">
         <input type="text" name="tpnm1" placeholder="Enter your ticket ID" >
       </div>
@@ -152,7 +150,7 @@
 
     <div align="center">
       <div class="controls">
-        <input type="submit" class="btn btn-primary" name="manageMyTicket" value="Manage My Ticket" style="margin-top: 15"></input>
+        <input type="submit" class="btn btn-primary btn-primary-big" name="manageMyTicket" value="Manage My Ticket" style="margin-top: 15"></input>
       </div>
     </div>
   </form>
