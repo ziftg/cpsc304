@@ -490,6 +490,9 @@ textarea {
     float: none;
  }
 
+ .table tbody tr:hover td, .table tbody tr:hover th {
+     background-color: #3bafda;
+ }
 
 html {overflow-y: scroll; overflow-x: hidden;}
 body {font-family: 'Open Sans', sans-serif; background:#21c6f6; color: white;}
