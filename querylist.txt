@@ -1,0 +1,161 @@
+1.  select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1
+             from workin,onboardstaff,Flight_Use
+             where workin.employNumber=$number1 and 
+            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD<='01-APR-2017 00:00:00'
+
+2. select workin.employNumber as employnumber,onboardstaff.name as name,workin.flightNumber as flightnumber,workin.dateorg as date1
+             from workin,onboardstaff,Flight_Use
+             where workin.employNumber=$number1 and 
+            workin.employNumber=onboardstaff.employNumber and Flight_Use.departureDate=workin.dateorg and Flight_Use.ETD>'01-APR-2017 00:00:00'  
+
+3. select Flight_Use.aircraftSerialNo 
+                  from Flight_Use 
+                  where Flight_Use.flightNumber='$fno' and Flight_Use.departureDate='$date'
+
+
+4.  select member_serve.userid as userid, member_serve.name as name 
+                  from member_serve
+                  where member_serve.employNumber=$eno
+
+5.select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
+            as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+            member_serve.dob as dob, member_serve.name as name
+            from member_serve
+            where member_serve.userid='$userid'
+
+
+6. select COUNT(ticket_has.ticketID) as numtickets
+         from member_serve,ticket_has
+         where member_serve.userid='$userid' and 
+         member_serve.passportNum=ticket_has.passportNumber
+
+7.select AVG(ticket_has.ticketPrice) as avgs
+         from member_serve,ticket_has
+         where member_serve.userid='$userid' and 
+         member_serve.passportNum=ticket_has.passportNumber
+8. select MIN(ticket_has.ticketPrice) as mins
+         from member_serve,ticket_has
+         where member_serve.userid='$userid' and 
+         member_serve.passportNum=ticket_has.passportNumber
+
+
+9.select  MAX(ticket_has.ticketPrice) as maxs
+         from member_serve,ticket_has
+         where member_serve.userid='$userid' and 
+         member_serve.passportNum=ticket_has.passportNumber
+
+
+10.select SUM(ticket_has.ticketPrice) as sums
+         from member_serve,ticket_has
+         where member_serve.userid='$userid' and 
+         member_serve.passportNum=ticket_has.passportNumber
+
+
+11.select * 
+        from Flight_Use
+  where Flight_Use.flightNumber='$flightno' and Flight_Use.departureDate='$ddate'
+
+12.   select * 
+        from Flight_Use
+        where Flight_Use.departureAirport='$dairport' and Flight_Use.arrivalAirport='$aairport' and 
+Flight_Use.ETD>= '$time1[0]' and Flight_Use.ETD<= '$time2[0]'
+
+
+13.select case when count(*) > 0 then 1 else 0 end 
+ from customerservice 
+ where employNumber='$eid' and password='$password'
+
+ 14.select case when count(*) > 0 then 1 else 0 end 
+ from onboardstaff 
+ where employNumber='$eid' and password='$password'")
+
+
+ 15.select case when count(*) > 0 then 1 else 0 end 
+ from member_serve
+ where userid='$eid' and password='$password'
+
+
+ 16.select ticket_has.ticketID, ticket_has.ticketPrice from ticket_has where ticket_has.passportNumber = '$ppn1' and ticket_has.flightNumber =  '$fn2' and ticket_has.dateorg = '$dt2'
+
+
+ 17.select * from ticket_has where ticket_has.ticketID='$tid3'
+
+ 18.delete from ticket_has where exists (select * from ticket_has where ticket_has.ticketID='$tid3')
+ 19.select * from purchase
+                  where purchase.userid='$uid5'
+
+
+
+ 20. update member_serve set member_serve.password='$passwordnew' where member_serve.userid ='$id9' and member_serve.password='$passwordold'
+
+ 21.update member_serve set member_serve.emailAddress='$email' where member_serve.userid ='$id10'
+
+ 22.select member_serve.userid, member_serve.emailAddress from member_serve where member_serve.userid ='$id10'
+
+ 23. select round(AVG(avgs)*100,4)
+               from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+
+
+
+
+24.select round(MAX(avgs)*100,4)
+                from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+
+
+
+25.  select round(MIN(avgs)*100,4)
+              from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
+                from AirCraft,Flight_Use
+                where Flight_Use.aircraftSerialNo=AirCraft.serialNo
+                group by AirCraft.serialNo)
+
+
+
+26.insert into purchase values ('$userid','$ticketid')
+27.select ticketid from purchase where userid='$userid'
+28.select ticket_has.ticketID, ticket_has.ticketPrice from ticket_has where ticket_has.passportNumber = '$passportnumber' and ticket_has.flightNumber =  '$flightno' and ticket_has.dateorg = '$date'
+
+29.insert into ticket_has values ('$ticketid','$price','$passportnumber','$flightno','$date')
+
+30.select member_serve.name from member_serve where not exists (select Flight_Use.flightNumber from Flight_Use minus select ticket_has.flightNumber from ticket_has where ticket_has.passportNumber = member_serve.passportNum)
+
+31.select Flight_Use.aircraftSerialNo as sno, Flight_Use.numOfPassengers as nop,
+                          AirCraft.type as type, AirCraft.capacity as cap
+                  from Flight_Use, AirCraft
+                  where Flight_Use.aircraftSerialNo=AirCraft.serialNo and Flight_Use.flightNumber='$fno' and Flight_Use.departureDate='$date'
+
+
+32.select ticket_has.ticketID as tid, ticket_has.ticketPrice as price,
+                                      ticket_has.flightNumber as fno, Flight_Use.ETD as etd, Flight_Use.ETA as eta,
+                                      Flight_Use.departureAirport as dapt, Flight_Use.arrivalAirport as aapt
+                                      from member_serve, Flight_Use, ticket_has
+                                      where member_serve.userid='$userid' and
+                                            member_serve.passportNum=ticket_has.passportNumber and
+                                            ticket_has.flightNumber=Flight_Use.flightNumber and
+                                            ticket_has.dateorg=Flight_Use.departureDate
+
+
+
+33.select customerservice.employNumber, customerservice.name
+                                      from member_serve, customerservice
+                                      where member_serve.userid='$userid' and
+                                            member_serve.employNumber=customerservice.employNumber
+
+
+
+
+
+
+
+
+
+
+
+
+
