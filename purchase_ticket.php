@@ -135,8 +135,11 @@
         $flightno=$_POST['fno'];
         $date=$_POST['dDate'];
         $passportnumber=$_POST['passport']; 
-        $ticketid=mt_rand(1000000000000,9999999999999);           
-        $temp=executePlainSQL("select ticketPrice from Flight_Use where flightNumber='$flightno'and departureDate='$date'");
+        $ticketid=mt_rand(1000000000000,9999999999999);  
+        $email=$_POST['email']; 
+       $pattern = "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$";
+        if (  eregi($pattern,$email))   
+        {$temp=executePlainSQL("select ticketPrice from Flight_Use where flightNumber='$flightno'and departureDate='$date'");
         $temp2 = OCI_Fetch_Array($temp, OCI_BOTH);
         $price = $temp2[0];
                
@@ -172,7 +175,9 @@
             break;
           }
 
-        }
+        }}
+        else 
+           echo "<script>alert('Purchase failure,wrong format!')</script>";
         }
           
     }
