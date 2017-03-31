@@ -7,41 +7,45 @@
   	<link rel="stylesheet" href="css/style.css" type="text/css">
   </head>
   <body>
-
-    <h2 style="text-align: center;">Membership Application</h2>
-    <div align="center">
-    <form action="mainpage.php">
+    <form action="mainpage.php" style="margin:50">
       <input type="submit"  class="btn btn-primary" value="Back">
     </form>
+    <h2 style="text-align: center;">Membership Application</h2>
+    <div align="center">
     <form method="POST" action="member_application.php">
-      <p>User ID:
-        <input type="text" name="userID" size="12">
-      </p>
-      <p>Password:
-        <input type="Password" name="password1" size="12">
-      </p>
-      <p>Confirm Password:
-        <input type="Password" name="password2" size="12">
-      </p>
-      <p>Full Name:
-        <input type="text" name="name" size="12">
-      </p>
-      <p>Gender:
-        <input type="text" placeholder="M/F" name="gender" size="12">
-      </p>
-      <p>email:
-        <input type="text" placeholder="1234567@abc.com" name="email" size="18">
-      </p>
-      <p>Passport Number:
-        <input type="text" placeholder="AA12345678" name="passport" size="12">
-      </p>
-      <p>Nationality:
-        <input type="text" name="nationality" size="12">
-      </p>
-      <p>Date of Birth:
-        <input type="text" placeholder="YYYY-MM-DD" name="dob" size="12">
-      </p>
-      <p><input type="submit" value="Apply"  class="btn btn-primary" name="applyMembership"></p>
+      <div class="container">
+        <div class="row">
+          <p class="col-sm-3">User ID:
+            <input type="text" name="userID" size="12">
+          </p>
+          <p class="col-sm-3">Password:
+            <input type="Password" name="password1" size="12">
+          </p>
+          <p class="col-sm-3">Confirm Password:
+            <input type="Password" name="password2" size="12">
+          </p>
+          <p class="col-sm-3">Full Name:
+            <input type="text" name="name" size="12">
+          </p>
+          <p class="col-sm-3">Gender:
+            <input type="text" placeholder="M/F" name="gender" size="12">
+          </p>
+          <p class="col-sm-3">email:
+            <input type="text" placeholder="1234567@abc.com" name="email" size="18">
+          </p>
+          <p class="col-sm-3">Passport Number:
+            <input type="text" placeholder="AA12345678" name="passport" size="12">
+          </p>
+          <p class="col-sm-3">Nationality:
+            <input type="text" name="nationality" size="12">
+          </p>
+          <p class="col-sm-3">Date of Birth:
+            <input type="text" placeholder="YYYY-MM-DD" name="dob" size="12">
+          </p>
+        </div>
+      </div>
+      <p><input type="submit" value="Apply"  class="btn btn-primary btn-primary-big" name="applyMembership"></p>
+
 
     </form>
     </div>
@@ -56,7 +60,7 @@
       <?php
 
 
-      
+
 
       //this tells the system that it's no longer just parsing
       //html; it's now parsing PHP
@@ -142,7 +146,7 @@
       function printExample ($result) {
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
           echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2]. "</td><td>" . $row[3]
-              . "</td><td>" . $row[4]. "</td><td>" . $row[5]. "</td><td>" . $row[6]. "</td><td>" . $row[7] 
+              . "</td><td>" . $row[4]. "</td><td>" . $row[5]. "</td><td>" . $row[6]. "</td><td>" . $row[7]
               . "</td><td>" . $row[8] ."</td></tr>"; //or just use "echo $row[0]"
         }
       }
@@ -171,7 +175,7 @@
                 ":f" => $_POST['nationality'],
                 ":g" => $_POST['dob'],
                 ":h" => $_POST['name'],
-                ":k" => $employID 
+                ":k" => $employID
               );
               $alltuples = array (
                 $tuple
@@ -195,7 +199,7 @@
 
     </div>
 
-    
+
 
 
 
