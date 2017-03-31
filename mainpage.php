@@ -22,7 +22,10 @@
   $pageTitle = "Eagle Fly - Your travel companion";
   $section = null;
   include("inc/header.php");
-  include("database_init.php");
-  include("inc/footer.php");
+  // include("database_init.php");
+  ?>
+
+  <?php
+    include("inc/footer.php");
   ?>
   </html>
