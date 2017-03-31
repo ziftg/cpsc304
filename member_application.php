@@ -187,7 +187,7 @@
               $newuser=executePlainSQL("select count(*) from member_serve where userid='$userid'");
                 $newuser=OCI_Fetch_Array($newuser,OCI_BOTH)[0];
               if($newuser==0)
-              echo "<script> alert('Sorry! apply failure, please check the format again!') </script>";
+              echo "<script> alert('Please enter a valid email address.') </script>";
               else
               echo "<script> alert('Congratulation! You are our member now') </script>";
             }

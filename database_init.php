@@ -1,5 +1,5 @@
 <form method="POST" action="database_init.php">
-
+  <p>WARNING: Click Reset button will restore the database to initial data. All changes will be lost!</p>
   <p><input type="submit" value="Reset" name="reset"></p>
 </form>
 

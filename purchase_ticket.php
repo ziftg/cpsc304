@@ -177,7 +177,7 @@
 
         }}
         else 
-           echo "<script>alert('Purchase failure,wrong format!')</script>";
+           echo "<script>alert('Please enter a valid email address.')</script>";
         }
           
     }

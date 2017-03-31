@@ -181,22 +181,7 @@
             echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
             echo "<table class='table table-hover text-centered'>";
             $userid = $_POST['userID'];
-        		// echo "
-            // <div class='container vertical-center-row'>
-            //     <form method='POST' action='members.php'>
-            //           <input type='hidden' name='userid' value=$userid>
-            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
-            //
-            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
-            //
-            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
-            //
-            //     </form>
-            //     <form method='POST' action='mainpage.php'>
-            //       <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top: 30'></div>
-            //     </form>
-            //
-            // </div>";
+
             echo "
               <form method='POST' action='members.php'>
                 <input type='hidden' name='userid' value=$userid>
@@ -586,9 +571,9 @@
           $newuser=executePlainSQL("select emailAddress from member_serve where userid='$userid'");
           $newuser=OCI_Fetch_Array($newuser,OCI_BOTH)[0];
           if($newuser!=$email)
-         echo "<script> alert('Sorry! update failure, please check the format again!') </script>";
-           else
-          echo "<script>alert('You have successfully changed your email.')</script>";
+            echo "<script> alert('Please enter a valid email address and try again.') </script>";
+          else
+            echo "<script>alert('You have successfully changed your email.')</script>";
         }
 
         if (array_key_exists('changid', $_POST)){
