@@ -425,9 +425,33 @@ button,
  */
  .btn-primary-outline {
    background-color: transparent;
-   border-color: transparent;
+   border-bottom-width: medium;
+   border-bottom-color: white;
    font-size: 30;
+   margin-top: 70px;
+   color: white;
  }
+
+ .btn-primary-big {
+   font-size: 30;
+   margin-top: 90px;
+   color: white;
+ }
+
+ .btn-minor-outline {
+   background-color: transparent;
+   border-bottom-width: thin;
+   border-color: transparent;
+   border-bottom-color: white;
+   font-size: 15;
+   font-weight: bold;
+   color: white;
+   margin-right: 20;
+ }
+
+ .btn div {
+  font-size:40px
+}
 
 
 /*
@@ -578,3 +602,8 @@ body {font-family: 'Open Sans', sans-serif; background:#21c6f6; color: white;}
 .footer a {text-decoration: none; color: white; margin: 0 10px;}
 .footer li:first-child a {margin-left: 4px;}
 .footer a:hover, .footer a:active {text-decoration: underline;}
+
+#ticketId{
+  margin-top: 90;
+  font-size: 30;
+}
