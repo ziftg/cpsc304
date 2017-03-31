@@ -29,6 +29,15 @@
       <!-- <h2>Eagle Fly</h2>
       <h3>Your travel compaion</h3> -->
       <?php
+      echo "
+      <div class='container'>
+        <div class='row'>
+          <form method='POST' action='mainpage.php'>
+            <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top: 30'></div>
+          </form>
+        </div>
+      </div>
+      ";
 
       //this tells the system that it's no longer just parsing
       //html; it's now parsing PHP
@@ -172,22 +181,36 @@
             echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
             echo "<table class='table table-hover text-centered'>";
             $userid = $_POST['userID'];
-        		echo "
-            <div class='container vertical-center-row'>
-                <form method='POST' action='members.php'>
-                      <input type='hidden' name='userid' value=$userid>
-                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
-
-                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
-
-                      <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
-
-                </form>
-                <form method='POST' action='mainpage.php'>
-                  <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top: 30'></div>
-                </form>
-
-            </div>";
+        		// echo "
+            // <div class='container vertical-center-row'>
+            //     <form method='POST' action='members.php'>
+            //           <input type='hidden' name='userid' value=$userid>
+            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Purchase History' name='history'></div>
+            //
+            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Your Service Agent' name='myAgent'></div>
+            //
+            //           <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Change Your Personal Information' name='profile'></div>
+            //
+            //     </form>
+            //     <form method='POST' action='mainpage.php'>
+            //       <div class='control-group col-sm-4'><input type='submit' class='btn btn-primary' value='Back' style='margin-top: 30'></div>
+            //     </form>
+            //
+            // </div>";
+            echo "
+              <form method='POST' action='members.php'>
+                <input type='hidden' name='userid' value=$userid>
+                <div class='form-group' align='center'>
+                  <input type='submit' class='btn btn-primary-outline btn-block' value='Purchase History' name='history'>
+                </div>
+                <div class='form-group' align='center'>
+                  <input type='submit' class='btn btn-primary-outline btn-block' value='Your Service Agent' name='myAgent'>
+                </div>
+                <div class='form-group' align='center'>
+                  <input type='submit' class='btn btn-primary-outline btn-block' value='Change Your Personal Information' name='profile'>
+                </div>
+              </form>
+            ";
           }
 
 
@@ -204,13 +227,12 @@
             where employNumber='$eid' and password='$password'");
 
             $value = OCI_Fetch_Array($result, OCI_BOTH)[0];
+             if(!$value){
+               echo "<script>alert('Oops! We cannot find you:(')</script>";
 
-
-                     if(!$value){
-                       echo "<script>alert('Oops! We cannot find you:(')</script>";
-                     }
-            else
-            {
+             }
+              else
+              {
               echo "<h3 class='text-centered'>Welcome: ". $_POST['userID'] ."</h3>";
               echo "<table class='table table-hover text-centered'>";
               $employid = $_POST['userID'];
@@ -359,8 +381,8 @@
         if(array_key_exists('memberDetail', $_POST)){
             $userid=$_POST['userid2'];
             $name=$_POST['name2'];
-            $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, 
-                      member_serve.emailAddress as email,member_serve.passportNum as passport, 
+            $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender,
+                      member_serve.emailAddress as email,member_serve.passportNum as passport,
                       member_serve.nationality as nationality,
                       member_serve.dob as dob, member_serve.name as name
                       from member_serve,
@@ -373,13 +395,13 @@
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as 
-                                        name,workin.flightNumber as flightnumber,workin.dateorg as date1, 
+          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as
+                                        name,workin.flightNumber as flightnumber,workin.dateorg as date1,
                                         onboardstaff.role as role
                                         from workin,onboardstaff,Flight_Use
                                         where workin.employNumber=$number1 and
-                                        workin.employNumber=onboardstaff.employNumber and 
-                                        Flight_Use.departureDate=workin.dateorg and 
+                                        workin.employNumber=onboardstaff.employNumber and
+                                        Flight_Use.departureDate=workin.dateorg and
                                         Flight_Use.ETD<='01-APR-2017 00:00:00'");
           printResultwinew($result);
         }
@@ -389,13 +411,13 @@
           echo "<table class='table table-hover text-centered'>";
           $number1=$_POST['employID'];
           executePlainSQL("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS'");
-          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as 
-                                      name,workin.flightNumber as flightnumber,workin.dateorg as date1, 
-                                      onboardstaff.role as role 
+          $result = executePlainSQL("select workin.employNumber as employnumber,onboardstaff.name as
+                                      name,workin.flightNumber as flightnumber,workin.dateorg as date1,
+                                      onboardstaff.role as role
                                       from workin,onboardstaff,Flight_Use
                                       where workin.employNumber=$number1 and
                                       workin.employNumber=onboardstaff.employNumber and
-                                      Flight_Use.departureDate=workin.dateorg and 
+                                      Flight_Use.departureDate=workin.dateorg and
                                       Flight_Use.ETD>'01-APR-2017 00:00:00'  ");
           printResultwinew($result);
         }
@@ -423,7 +445,7 @@
                 where Flight_Use.aircraftSerialNo=AirCraft.serialNo
                 group by AirCraft.serialNo)
                 ");
-       
+
           $result2= executePlainSQL("
                 select round(MAX(avgs)*100,4)
                 from(select AVG(Flight_Use.numOfPassengers/AirCraft.capacity) as avgs
@@ -439,7 +461,7 @@
                 where Flight_Use.aircraftSerialNo=AirCraft.serialNo
                 group by AirCraft.serialNo)
                 ");
-                
+
           if(isset($_POST['statsType'])){
             $decide = $_POST['statsType'];
             switch ($decide) {
@@ -453,7 +475,7 @@
                       echo 'Minimum Attendance Rate: ',OCI_Fetch_Array($result3,OCI_BOTH)[0],'%';
                     break;
             }
-        }   
+        }
         }
 
         if (array_key_exists('aircraft', $_POST)){
@@ -490,7 +512,7 @@
           $userid = $_POST['userid'];
           echo "<h3 class='text-centered'>Change your Profile: ". $_POST['userid'] ."</h3>";
           $result=executePlainSQL("select member_serve.userid as userid, member_serve.gender as gender, member_serve.emailAddress
-              as email,member_serve.passportNum as passport, member_serve.nationality as nationality, 
+              as email,member_serve.passportNum as passport, member_serve.nationality as nationality,
               member_serve.dob as dob, member_serve.name as name
               from member_serve
               where member_serve.userid='$userid'");
@@ -498,10 +520,10 @@
           echo "<div align='center'>
                   <form action='members.php' method='POST'>
                     <input type='hidden' name='userid' value=$userid>
-                    <p>Passport Number: 
+                    <p>Passport Number:
                       <input type='text' name='passport'>
                     </p>
-                    <p>New User ID: 
+                    <p>New User ID:
                       <input type='text' name='newid'>
                     </p>
                     <p>
@@ -511,13 +533,13 @@
 
                   <form action='members.php' method='POST'>
                     <input type='hidden' name='userid' value=$userid>
-                    <p>Old Password: 
+                    <p>Old Password:
                       <input type='password' name='oldpassword'>
                     </p>
-                    <p>New Password: 
+                    <p>New Password:
                       <input type='password' name='newpassword1'>
                     </p>
-                    <p>New Password Confirm: 
+                    <p>New Password Confirm:
                       <input type='password' name='newpassword2'>
                     </p>
                     <p>
@@ -527,7 +549,7 @@
 
                   <form action='members.php' method='POST'>
                     <input type='hidden' name='userid' value=$userid>
-                    <p>New Email: 
+                    <p>New Email:
                       <input type='text' name='newemail'>
                     </p>
                     <p>
