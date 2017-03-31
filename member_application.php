@@ -184,6 +184,10 @@
               OCICommit($db_conn);
               //$new_member = executePlainSQL("select * from member_serve");
               //printExample($new_member);
+              $newuser=executePlainSQL("select count(*) from member_serve where userid=:a");
+              if(OCI_Fetch_Array($newuser,OCI_BOTH)[0]==0)
+              echo "<script> alert('Sorry! apply failure, please check the format again!') </script>";
+              else
               echo "<script> alert('Congratulation! You are our member now') </script>";
             }
 

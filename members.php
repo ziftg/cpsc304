@@ -583,6 +583,11 @@
           $email=$_POST['newemail'];
           executePlainSQL("update member_serve set member_serve.emailAddress='$email' where member_serve.userid ='$userid'");
           OCICommit($db_conn);
+          $newuser=executePlainSQL("select emailAddress from member_serve where userid='$userid'");
+          $newuser=OCI_Fetch_Array($newuser,OCI_BOTH)[0];
+          if($newuser!=$email)
+         echo "<script> alert('Sorry! update failure, please check the format again!') </script>";
+           else
           echo "<script>alert('You have successfully changed your email.')</script>";
         }
 
