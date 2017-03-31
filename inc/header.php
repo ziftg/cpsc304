@@ -230,7 +230,7 @@
 
       function printflightinfo($result) { //prints results from a select statement
         //echo "<br> CLIENTS INFO<br>";
-        echo "<table class='table table-hover text-centered' style='color: black'>";
+        echo "<table class='table table-hover text-centered' style='color: white'>";
         echo "<tr><th>Flight Number</th><th>Departure Date</th><th>Price</th><th>Departure Airport</th>
         <th>Arrival Airport</th><th>ETD</th>
         <th>ETA</th><th>Action</th></tr>";
@@ -253,13 +253,13 @@
 
       function printresultticket($result){
         if($result){
-          echo "<table class='table table-hover text-centered' style='color: black'>";
+          echo "<table class='table table-hover text-centered' style='color: white'>";
           echo "<tr><th>Ticket ID</th><th>Ticket Price</th><th>Passport Number</th><th>Flight Number</th><th>Date</th>
                 <th>Cancel Flight</th></tr>";
 
         while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
            echo "<tr align='center'><td>".$row[0]."</td><td>".$row[1]."</td><td>".$row[2]."</td><td>".$row[3].
-            "</td><td>".$row[4]."</td><td>" . 
+            "</td><td>".$row[4]."</td><td>" .
             "<form method='POST' action='mainpage.php'>
               <p> <input type='hidden' name='ticketid' size='6' value=$row[0]>
                   <input type='submit' name='cancel' class='btn btn-primary' value='Cancel'>
